@@ -52,23 +52,25 @@ class _TaskListWidgetState extends State<TaskListWidget> {
           if (state is TaskListLoaded) {
             return Column(
               children: [
-                Expanded(
-                    child: Material(
-                  child: ListView.separated(
-                    padding: const EdgeInsets.only(top: 16),
-                    itemBuilder: (context, i) {
-                      return TaskTile(
-                        task: state.taskList[i],
-                        user: user,
-                        getTask: getTask,
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(color: theme.dividerColor);
-                    },
-                    itemCount: state.taskList.length,
-                  ),
-                ))
+                Flexible(
+                  child: Expanded(
+                      child: Material(
+                    child: ListView.separated(
+                      padding: const EdgeInsets.only(top: 16),
+                      itemBuilder: (context, i) {
+                        return TaskTile(
+                          task: state.taskList[i],
+                          user: user,
+                          getTask: getTask,
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider(color: theme.dividerColor);
+                      },
+                      itemCount: state.taskList.length,
+                    ),
+                  )),
+                )
               ],
             );
           } else if (state is TaskListFailure) {

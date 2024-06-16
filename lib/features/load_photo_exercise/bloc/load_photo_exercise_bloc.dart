@@ -17,9 +17,7 @@ class LoadPhotoExerciseBloc
   LoadPhotoExerciseBloc(this.exerciseRepository)
       : super(LoadPhotoExerciseInit()) {
     on<LoadPhotoExerciseUploadInitEvent>((event, emit) async {
-      print("0 = "+event.user.toString());
-      print("0 = "+event.requestData.toString());
-      print("1");
+      emit(LoadPhotoExerciseUploading());
       try {
         print("2");
         final loadedPhotoResponse = await exerciseRepository

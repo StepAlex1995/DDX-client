@@ -1,5 +1,4 @@
 import 'package:ddx_trainer/repository/task/model/task_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../repository/user_repository/model/user_response.dart';

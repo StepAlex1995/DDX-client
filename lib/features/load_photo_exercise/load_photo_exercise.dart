@@ -131,7 +131,7 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
                       if (state is LoadPhotoExerciseUploading) {
                         return const Column(
                           children: [
-                            SizedBox(height: 300),
+                            SizedBox(height: 30),
                             Center(
                               child: CircularProgressIndicator(
                                 color: AppColor.primaryColor,

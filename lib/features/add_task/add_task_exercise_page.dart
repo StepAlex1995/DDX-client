@@ -1,4 +1,5 @@
 import 'package:ddx_trainer/features/add_task/bloc/add_task_bloc.dart';
+import 'package:ddx_trainer/features/add_task/exercise_list_for_task_widget.dart';
 import 'package:ddx_trainer/features/exercise_list/widgets/exercise_tile.dart';
 import 'package:ddx_trainer/features/task_list/task_list_page.dart';
 import 'package:ddx_trainer/repository/task/abstract_task_repository.dart';
@@ -107,7 +108,7 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
           if (selectedExercise == null) {
             return SizedBox(
               height: 600,
-              child: ExerciseListWidget(
+              child: ExerciseListForTaskWidget(
                 user: widget.user,
                 exerciseListBloc: _exerciseListBloc,
                 actionRepeat: repeatLoadExercise,
