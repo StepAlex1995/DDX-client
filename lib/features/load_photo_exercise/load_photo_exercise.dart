@@ -1,0 +1,273 @@
+import 'dart:io';
+
+import 'package:ddx_trainer/features/home_trainer/home_trainer_page.dart';
+import 'package:ddx_trainer/features/load_photo_exercise/bloc/load_photo_exercise_bloc.dart';
+import 'package:ddx_trainer/repository/exercise/model/load_photo_exercise_request.dart';
+import 'package:ddx_trainer/router/app_router.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import '../../repository/exercise/abstract_exercise_repository.dart';
+import '../../repository/user_repository/model/user_response.dart';
+import '../../text/text.dart';
+import '../../theme/theme.dart';
+import '../widgets/rounded_button.dart';
+
+class LoadPhotoExercise extends StatefulWidget {
+  final User user;
+  final int exerciseId;
+
+  const LoadPhotoExercise(
+      {super.key, required this.user, required this.exerciseId});
+
+  @override
+  State<LoadPhotoExercise> createState() =>
+      _LoadPhotoExerciseState(user: user, exerciseId: exerciseId);
+}
+
+class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
+  final User user;
+  final int exerciseId;
+
+  bool loadSuccess = false;
+  int photoNumber = 0;
+
+  XFile? file;
+  ImagePicker image = ImagePicker();
+
+  final _loadPhotoExerciseBloc =
+      LoadPhotoExerciseBloc(GetIt.I<AbstractExerciseRepository>());
+
+  _LoadPhotoExerciseState({required this.user, required this.exerciseId});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          backgroundColor: AppColor.darkBackgroundColor,
+          middle: Text(
+            AppTxt.titleExercise,
+            style: theme.textTheme.bodyMedium!
+                .copyWith(color: AppColor.hintTextColor),
+          ),
+        ),
+        child: Material(
+            child: Container(
+          padding:
+              const EdgeInsets.only(left: 36.0, right: 36, top: 36, bottom: 36),
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Container(
+                width: 300,
+                height: 240,
+                color: AppColor.darkBackgroundColor,
+                child: file == null
+                    ? const Icon(
+                        Icons.image,
+                        size: 50,
+                      )
+                    : Image.file(File(file!.path), fit: BoxFit.fitHeight),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 36.0, right: 36, top: 36),
+                child: RoundedButton(
+                  bgrColor: AppColor.secondaryAccentColor,
+                  text: AppTxt.btnAddFromGallery,
+                  textStyle: theme.textTheme.labelMedium,
+                  onPressed: () {
+                    getGallery();
+                    //checkPermissionGallery();
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 36.0, right: 36, top: 18, bottom: 36),
+                child: RoundedButton(
+                  bgrColor: AppColor.secondaryAccentColor,
+                  text: AppTxt.btnAddFromCamera,
+                  textStyle: theme.textTheme.labelMedium,
+                  onPressed: () {
+                    getCamera();
+                    //checkPermissionCamera();
+                  },
+                ),
+              ),
+
+              /////
+              Text(
+                AppTxt.uploadedFilesCount + "\t" + photoNumber.toString(),
+                style: theme.textTheme.bodyMedium,
+              ),
+              BlocListener<LoadPhotoExerciseBloc, LoadPhotoExerciseState>(
+                bloc: _loadPhotoExerciseBloc,
+                listener: (context, state) {
+                  if (state is LoadPhotoExerciseUploaded) {
+                    setState(() {
+                      loadSuccess = true;
+                      photoNumber++;
+                      file = null;
+                    });
+                  }
+                },
+                child: BlocBuilder(
+                    bloc: _loadPhotoExerciseBloc,
+                    builder: (context, state) {
+                      if (state is LoadPhotoExerciseUploading) {
+                        return const Column(
+                          children: [
+                            SizedBox(height: 300),
+                            Center(
+                              child: CircularProgressIndicator(
+                                color: AppColor.primaryColor,
+                              ),
+                            ),
+                          ],
+                        );
+                      } else if (state is LoadPhotoExerciseFailure) {
+                        return Column(
+                          children: [
+                            Text(
+                              state.msg,
+                              style: theme.textTheme.bodySmall,
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            RoundedButton(
+                              bgrColor: AppColor.primaryColor,
+                              text: AppTxt.btnUploadPhoto,
+                              textStyle: theme.textTheme.labelMedium,
+                              onPressed: () {
+                                uploadPhoto();
+                                //goToExerciseList();
+                              },
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Builder(builder: (context) {
+                          if (file != null) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 9.0, right: 9, top: 18, bottom: 18),
+                              child: RoundedButton(
+                                bgrColor: AppColor.primaryColor,
+                                text: AppTxt.btnUploadPhoto,
+                                textStyle: theme.textTheme.labelMedium,
+                                onPressed: () {
+                                  uploadPhoto();
+                                  //goToExerciseList();
+                                },
+                              ),
+                            );
+                          } else if (loadSuccess == true) {
+                            return Text(AppTxt.fileUploadSuccess);
+                          } else {
+                            return Container();
+                          }
+                        });
+                      }
+                    }),
+              ),
+              ///////
+              /*Builder(
+                    builder: (context) {
+                      if (file != null) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              left: 9.0, right: 9, top: 18, bottom: 18),
+                          child: RoundedButton(
+                            bgrColor: AppColor.primaryColor,
+                            text: AppTxt.btnUploadPhoto,
+                            textStyle: theme.textTheme.labelMedium,
+                            onPressed: () {
+                              uploadPhoto();
+                              //goToExerciseList();
+                            },
+                          ),
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),*/
+
+              Builder(builder: (context) {
+                if (loadSuccess == true) {
+                  return RoundedButton(
+                    bgrColor: AppColor.secondaryAccentColor,
+                    text: AppTxt.btnComplete,
+                    textStyle: theme.textTheme.labelMedium,
+                    onPressed: () {
+                      goToExerciseList();
+                    },
+                  );
+                } else {
+                  return Container();
+                }
+              })
+            ],
+          ),
+        )));
+  }
+
+  checkPermissionGallery() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
+    ].request();
+
+    if (statuses[Permission.storage] != PermissionStatus.granted) {
+      return;
+    }
+    getGallery();
+  }
+
+  checkPermissionCamera() async {
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+    ].request();
+    if (statuses[Permission.camera] != PermissionStatus.granted) {
+      return;
+    }
+    getCamera();
+  }
+
+  uploadPhoto() {
+    _loadPhotoExerciseBloc.add(LoadPhotoExerciseUploadInitEvent(
+        user: user,
+        requestData: LoadPhotoExerciseRequest(
+            exerciseId: exerciseId, number: photoNumber, file: file!)));
+  }
+
+  goToExerciseList() {
+    AppRouter.goToPage(context, HomeTrainerPage(user: user, indexTab: 1), true);
+    //  Navigator.pop(context);
+    //  Navigator.pop(context);
+  }
+
+  getCamera() async {
+    var img = await image.pickImage(source: ImageSource.camera);
+    setState(() {
+      file = img;
+      //file = File(img!.path);
+    });
+  }
+
+  getGallery() async {
+    /* var img = await image.pickImage(source: ImageSource.gallery);
+    setState(() {
+      file = File(img!.path);
+    });*/
+    var img = await image.pickImage(source: ImageSource.gallery);
+    setState(() {
+      file = img;
+    });
+  }
+}

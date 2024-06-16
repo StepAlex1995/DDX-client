@@ -1,0 +1,45 @@
+name: ddx_trainer
+description: "Fitness application"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  flutter_bloc: ^8.1.5
+  equatable: ^2.0.5
+  flutter_secure_storage: ^9.2.2
+  get_it: ^7.7.0
+  google_fonts: ^6.2.1
+  font_awesome_flutter: ^10.7.0
+  dio: ^5.4.3+1
+  cupertino_radio_choice: ^1.0.2
+  intl: ^0.19.0
+  badges: ^3.1.2
+  cached_network_image: ^3.3.1
+  #//image_picker: ^1.1.2
+  image_picker: ^0.8.4+3
+  permission_handler: ^10.3.0
+  table_calendar: ^3.1.2
+  numberpicker: ^2.1.2
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.9.2
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/img/
+
+flutter_icons:
+  android: true
+  image_path: "assets/logg.png"
