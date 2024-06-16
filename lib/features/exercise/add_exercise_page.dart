@@ -66,9 +66,8 @@ class _AddExercisePageState extends State<AddExercisePage> {
             bloc: _exerciseBloc,
             listener: (context, state) {
               if (state is ExerciseUploaded) {
-                //goToLoadPhotoExercise(state.exerciseId);
-                AppRouter.goToPage(
-                    context, HomeTrainerPage(user: widget.user, indexTab: 1));
+                AppRouter.goToPage(context,
+                    HomeTrainerPage(user: widget.user, indexTab: 1), true);
               }
             },
             child: BlocBuilder<ExerciseBloc, ExerciseState>(

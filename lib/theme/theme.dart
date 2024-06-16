@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:google_fonts/google_fonts.dart';
 
 /*const backgroundColor = Color.fromARGB(255, 35, 39, 45);
 const primaryColor = Color.fromARGB(255, 236, 137, 48);
@@ -86,13 +86,16 @@ class AppColor {
   static const backgroundColor = Color.fromARGB(255, 47, 48, 53);
   static const primaryColor = Color.fromARGB(255, 223, 86, 52);
   static const disabledColor = Color.fromARGB(155, 183, 56, 22);
-  static const accentColor = Color.fromARGB(255, 0, 255, 0);
+  static const accentColor = Colors.yellow;// Color.fromARGB(255, 0, 255, 0);
   static const mainTextColor = Color.fromARGB(255, 254, 254, 254);
   static const titleTextColor = Color.fromARGB(255, 254, 254, 254);
   static const editTextColor = Color.fromARGB(255, 254, 254, 254);
   static const hintTextColor = Color.fromARGB(255, 164, 164, 164);
   static const transparentColor = Color.fromARGB(0, 0, 0, 0);
   static const semiWhite = Color.fromARGB(255, 112, 113, 115);
+  static const badGrade = Colors.red;
+  static const okGrade = Colors.yellow;
+  static const goodGrade = Colors.green;
 
   static const appGrey = Color.fromARGB(255, 82, 83, 85);
 

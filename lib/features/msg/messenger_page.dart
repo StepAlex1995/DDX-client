@@ -197,10 +197,10 @@ class _MessengerPageState extends State<MessengerPage> {
       child: Align(
         alignment: Alignment.bottomCenter,
         child: Container(
-          height: 120,
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
           color: AppColor.darkBackgroundColor,
           child: TextField(
+            maxLines: 1,
             onChanged: (text) {
               if (text.isEmpty && isReadyToSending ||
                   text.isNotEmpty && !isReadyToSending) {
@@ -218,6 +218,9 @@ class _MessengerPageState extends State<MessengerPage> {
                 listener: (context, state) {
                   if (state is MsgSendState) {
                     textMsgController.clear();
+                    setState(() {
+                      isReadyToSending = false;
+                    });
                     _msgListBloc.add(LoadMsgListEvent(
                         user: widget.user, taskId: widget.task.id));
                   }

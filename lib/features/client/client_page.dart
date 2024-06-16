@@ -1,3 +1,4 @@
+import 'package:ddx_trainer/features/statistics/statistics_page.dart';
 import 'package:ddx_trainer/features/task_list/task_list_page.dart';
 import 'package:ddx_trainer/router/app_router.dart';
 import 'package:flutter/cupertino.dart';
@@ -84,7 +85,7 @@ class ClientPage extends StatelessWidget {
                   text: AppTxt.btnShowState,
                   textStyle: theme.textTheme.labelMedium,
                   onPressed: () {
-                    //goToEditProfile(context);
+                    goToStatisticsPage(context);
                   },
                 ),
               ),
@@ -115,5 +116,8 @@ class ClientPage extends StatelessWidget {
 
   goToTaskListPage(BuildContext context) {
     AppRouter.goToPage(context, TaskListPage(user: user, client: client));
+  }
+  goToStatisticsPage(BuildContext context) {
+    AppRouter.goToPage(context, const StatisticsPage());
   }
 }

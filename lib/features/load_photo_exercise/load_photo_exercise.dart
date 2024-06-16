@@ -48,21 +48,31 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
+        /*navigationBar: CupertinoNavigationBar(
           backgroundColor: AppColor.darkBackgroundColor,
           middle: Text(
             AppTxt.titleExercise,
             style: theme.textTheme.bodyMedium!
                 .copyWith(color: AppColor.hintTextColor),
           ),
-        ),
+        ),*/
         child: Material(
             child: Container(
           padding:
-              const EdgeInsets.only(left: 36.0, right: 36, top: 36, bottom: 36),
+              const EdgeInsets.only(left: 10.0, right: 10, top: 36, bottom: 36),
           alignment: Alignment.center,
           child: Column(
             children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Text(
+                AppTxt.titlePhotoExecute,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleLarge,
+              ),const SizedBox(
+                height: 30,
+              ),
               Container(
                 width: 300,
                 height: 240,
@@ -100,10 +110,9 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
                 ),
               ),
 
-              /////
               Text(
-                AppTxt.uploadedFilesCount + "\t" + photoNumber.toString(),
-                style: theme.textTheme.bodyMedium,
+                "${AppTxt.uploadedFilesCount}\t$photoNumber",
+                style: theme.textTheme.bodyMedium?.copyWith(fontSize: 30),
               ),
               BlocListener<LoadPhotoExerciseBloc, LoadPhotoExerciseState>(
                 bloc: _loadPhotoExerciseBloc,
@@ -176,38 +185,19 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
                       }
                     }),
               ),
-              ///////
-              /*Builder(
-                    builder: (context) {
-                      if (file != null) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                              left: 9.0, right: 9, top: 18, bottom: 18),
-                          child: RoundedButton(
-                            bgrColor: AppColor.primaryColor,
-                            text: AppTxt.btnUploadPhoto,
-                            textStyle: theme.textTheme.labelMedium,
-                            onPressed: () {
-                              uploadPhoto();
-                              //goToExerciseList();
-                            },
-                          ),
-                        );
-                      } else {
-                        return Container();
-                      }
-                    },
-                  ),*/
 
               Builder(builder: (context) {
                 if (loadSuccess == true) {
-                  return RoundedButton(
-                    bgrColor: AppColor.secondaryAccentColor,
-                    text: AppTxt.btnComplete,
-                    textStyle: theme.textTheme.labelMedium,
-                    onPressed: () {
-                      goToExerciseList();
-                    },
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 10.0,right: 10,top: 30),
+                    child: RoundedButton(
+                      bgrColor: AppColor.primaryColor,
+                      text: AppTxt.btnComplete,
+                      textStyle: theme.textTheme.labelMedium,
+                      onPressed: () {
+                        goToExerciseList();
+                      },
+                    ),
                   );
                 } else {
                   return Container();
@@ -248,8 +238,6 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
 
   goToExerciseList() {
     AppRouter.goToPage(context, HomeTrainerPage(user: user, indexTab: 1), true);
-    //  Navigator.pop(context);
-    //  Navigator.pop(context);
   }
 
   getCamera() async {

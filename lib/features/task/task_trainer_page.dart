@@ -140,13 +140,15 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
           if (widget.task.feedbackTrainer >= 1) {
             return Column(
               children: [
-                const SizedBox(height: 28),
-                Text(
-                  AppTxt.gradeTrainerCompleteForTrainer +
-                      widget.task.feedbackTrainer.toString(),
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium!
-                      .copyWith(color: AppColor.secondaryAccentColor),
+                Padding(
+                  padding: const EdgeInsets.only(top: 28.0,left: 20,right: 20),
+                  child: Text(
+                    AppTxt.gradeTrainerCompleteForTrainer +
+                        widget.task.feedbackTrainer.toString(),
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.bodyMedium!
+                        .copyWith(color: getColorByGradeTrainer(widget.task.feedbackTrainer),fontSize: 20),
+                  ),
                 ),
                 const SizedBox(height: 24),
               ],
@@ -238,7 +240,7 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
                       widget.task.feedbackClient.toString(),
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium!
-                      .copyWith(color: AppColor.secondaryAccentColor),
+                      .copyWith(color: getColorByGradeClient(widget.task.feedbackClient),fontSize: 20),
                 ),
                 const SizedBox(height: 24),
               ],
@@ -261,6 +263,27 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
         ),
       ],
     ));
+  }
+
+
+  MaterialColor getColorByGradeClient(int grade){
+    if (grade >= 4) {
+      return AppColor.badGrade;
+    }
+    if(grade <=2){
+      return AppColor.goodGrade;
+    }
+    return AppColor.okGrade;
+  }
+
+  MaterialColor getColorByGradeTrainer(int grade){
+    if (grade >= 4) {
+      return AppColor.goodGrade;
+    }
+    if(grade <=2){
+      return AppColor.badGrade;
+    }
+    return AppColor.okGrade;
   }
 
   goToMessenger() {

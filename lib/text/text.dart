@@ -42,6 +42,7 @@ class AppTxt {
   static const titleTasks = 'Тренировки';
   static const titleTask = 'Задание';
   static const titleTasksExecute = 'Упражнение';
+  static const titlePhotoExecute = 'Примеры';
 
   static const lvlEasy = 'Начинающий';
   static const lvlMedium = 'Средний';
@@ -122,6 +123,8 @@ class AppTxt {
   static const errBtnTextDefault = 'Обновить';
 
   static const emptyDataDropdown = 'Выбрать';
+  static const inDeveloping = 'В разработке';
+  static const inDevelopingDescription = 'В следующем обновлении';
 
   static List<DropdownMenuItem<String>> musculeDropdownItems = [
     DropdownMenuItem(

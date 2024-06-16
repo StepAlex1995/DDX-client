@@ -27,9 +27,9 @@ class _DiscussionsPageState extends State<DiscussionsPage> {
   @override
   void initState() {
     super.initState();
-    if(widget.user.role == User.CLIENT_ROLE){
+    if (widget.user.role == User.CLIENT_ROLE) {
       _discussionBloc.add(LoadDiscussionClientEvent(user: widget.user));
-    }else {
+    } else {
       _discussionBloc.add(LoadDiscussionTrainerEvent(user: widget.user));
     }
   }
@@ -43,21 +43,18 @@ class _DiscussionsPageState extends State<DiscussionsPage> {
       child: SafeArea(
         child: Column(
           children: [
-            const SizedBox(
-              height: 10,
-            ),
             Center(
-              child: Container(
-                alignment: Alignment.center,
-                child: Text(
-                  AppTxt.tabDiscussions,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.titleLarge,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20.0,bottom: 16),
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    AppTxt.tabDiscussions,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.titleLarge,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 16,
             ),
             //////
             BlocBuilder<DiscussionBloc, DiscussionState>(
@@ -73,7 +70,7 @@ class _DiscussionsPageState extends State<DiscussionsPage> {
                             return DiscussionClientTile(
                                 user: widget.user,
                                 discussionClient: state.discussionList[i]);
-                          }else {
+                          } else {
                             return DiscussionTrainerTail(
                                 user: widget.user,
                                 discussion: state.discussionList[i]);
@@ -88,16 +85,14 @@ class _DiscussionsPageState extends State<DiscussionsPage> {
                       ),
                     ));
                   } else if (state is DiscussionFailureState) {
-                    return Column(
-                      children: [
-                        const SizedBox(height: 250),
-                        ErrorInfo(
-                          textTitle: state.code == 200 ? state.msg : null,
-                          textDescription: state.code == 200
-                              ? AppTxt.discussionListEmptyDescription
-                              : null,
-                        ),
-                      ],
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 250.0,left: 20,right: 20),
+                      child: ErrorInfo(
+                        textTitle: state.code == 200 ? state.msg : null,
+                        textDescription: state.code == 200
+                            ? AppTxt.discussionListEmptyDescription
+                            : null,
+                      ),
                     );
                   } else {
                     return const Column(

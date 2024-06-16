@@ -72,7 +72,7 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
       decoration: BoxDecoration(color: theme.canvasColor),
       child: SafeArea(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: ListView(
             children: [
               const SizedBox(

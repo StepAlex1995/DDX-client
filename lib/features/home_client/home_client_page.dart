@@ -1,11 +1,10 @@
-import 'package:ddx_trainer/repository/client/model/client.dart';
+import 'package:ddx_trainer/features/statistics/statistics_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../../repository/user_repository/model/user_response.dart';
 import '../../text/text.dart';
-import '../client/client_page.dart';
 import '../discussions/discussions_page.dart';
 import '../profile/profile_page.dart';
 import '../task_list/task_list_page.dart';
@@ -64,7 +63,7 @@ class _HomeClientPageState extends State<HomeClientPage> {
             case 0:
               return TaskListPage(user: user, client: user.convertToClient());
             case 1:
-              return Container();
+              return const StatisticsPage();
             case 2:
               return DiscussionsPage(user: user);
             case 3:

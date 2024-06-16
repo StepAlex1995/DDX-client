@@ -253,13 +253,18 @@ class _TaskClientPageState extends State<TaskClientPage> {
             if (widget.task.feedbackClient >= 1) {
               return Column(
                 children: [
-                  const SizedBox(height: 28),
-                  Text(
-                    AppTxt.difficultyClientCompleteForClient +
-                        widget.task.feedbackClient.toString(),
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium!
-                        .copyWith(color: AppColor.secondaryAccentColor),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(top: 28.0, left: 20, right: 20),
+                    child: Text(
+                      AppTxt.difficultyClientCompleteForClient +
+                          widget.task.feedbackClient.toString(),
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium!.copyWith(
+                          color:
+                              getColorByGradeClient(widget.task.feedbackClient),
+                          fontSize: 20),
+                    ),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -353,7 +358,7 @@ class _TaskClientPageState extends State<TaskClientPage> {
                         widget.task.feedbackTrainer.toString(),
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium!
-                        .copyWith(color: AppColor.secondaryAccentColor),
+                        .copyWith(color: getColorByGradeTrainer(widget.task.feedbackTrainer),fontSize: 20),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -472,6 +477,26 @@ class _TaskClientPageState extends State<TaskClientPage> {
         user: widget.user,
         updateTaskRequest: updateTask,
         taskId: widget.task.id));
+  }
+
+  MaterialColor getColorByGradeClient(int grade) {
+    if (grade >= 4) {
+      return AppColor.badGrade;
+    }
+    if (grade <= 2) {
+      return AppColor.goodGrade;
+    }
+    return AppColor.okGrade;
+  }
+
+  MaterialColor getColorByGradeTrainer(int grade) {
+    if (grade >= 4) {
+      return AppColor.goodGrade;
+    }
+    if (grade <= 2) {
+      return AppColor.badGrade;
+    }
+    return AppColor.okGrade;
   }
 
   resetParams() {

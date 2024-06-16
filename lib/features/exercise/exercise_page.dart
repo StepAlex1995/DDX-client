@@ -62,20 +62,17 @@ class ExercisePage extends StatelessWidget {
                       idx == exercise.photo!.length),
                 ),
               ),
-              /////
-              //
-              const SizedBox(
-                height: 10,
-              ),
-
               textDescription(AppTxt.descriptionMuscle, theme),
               textInfo(exercise.muscle, theme),
+              const SizedBox(height: 10),
 
               textDescription(AppTxt.descriptionType, theme),
               textInfo(exercise.type, theme),
+              const SizedBox(height: 10),
 
               textDescription(AppTxt.descriptionEquipment, theme),
               textInfo(exercise.equipment, theme),
+              const SizedBox(height: 10),
 
               textDescription(AppTxt.descriptionDifficulty, theme),
               textInfo(
@@ -85,6 +82,8 @@ class ExercisePage extends StatelessWidget {
                           ? AppTxt.lvlMedium
                           : AppTxt.lvlEasy,
                   theme),
+              const SizedBox(height: 10),
+
               Builder(builder: (context) {
                 if (exercise.description.isNotEmpty &&
                     exercise.description != BaseModel.NO_DATA_STR) {
@@ -123,17 +122,14 @@ class ExercisePage extends StatelessWidget {
         ));
   }
 
-  Widget textInfo(String textInf, ThemeData theme) => SizedBox(
-        height: 35,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-          child: Text(
-            textInf,
-            textAlign: TextAlign.left,
-            style: theme.textTheme.bodyMedium,
-          ),
-        ),
-      );
+  Widget textInfo(String textInf, ThemeData theme) => Padding(
+    padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+    child: Text(
+      textInf,
+      textAlign: TextAlign.left,
+      style: theme.textTheme.bodyMedium,
+    ),
+  );
 
   Widget textDescription(String textDesc, ThemeData theme) => Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),

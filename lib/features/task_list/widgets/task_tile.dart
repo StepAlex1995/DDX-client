@@ -26,27 +26,27 @@ class TaskTile extends StatelessWidget {
           padding: const EdgeInsets.only(left: 2.0),
           child: Builder(
             builder: (context) {
-              switch (task.state) {
+              switch (task.exercise.difficulty) {
                 case 2:
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      star(theme),
-                      star(theme),
-                      star(theme),
+                      star(theme,task.state),
+                      star(theme,task.state),
+                      star(theme,task.state),
                     ],
                   );
                 case 1:
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      star(theme),
-                      star(theme),
+                      star(theme,task.state),
+                      star(theme,task.state),
                     ],
                   );
                 case 0:
                 default:
-                  return star(theme);
+                  return star(theme,task.state);
               }
             },
           ),
@@ -68,11 +68,11 @@ class TaskTile extends StatelessWidget {
         });
   }
 
-  Widget star(ThemeData theme) {
-    return const Icon(
+  Widget star(ThemeData theme, int taskState) {
+    return  Icon(
       size: 15,
       Icons.grade_outlined,
-      color: AppColor.primaryColor,
+      color:  taskState <=1 ? AppColor.primaryColor : AppColor.goodGrade,
     );
   }
 }
