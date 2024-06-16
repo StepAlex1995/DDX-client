@@ -55,14 +55,6 @@ class _TaskListPageState extends State<TaskListPage> {
     final theme = Theme.of(context);
 
     return CupertinoPageScaffold(
-        /*navigationBar: CupertinoNavigationBar(
-          backgroundColor: AppColor.darkBackgroundColor,
-          middle: Text(
-            AppTxt.titleTasks,
-            style: theme.textTheme.bodyMedium!
-                .copyWith(color: AppColor.hintTextColor),
-          ),
-        ),*/
         child: ListView(
           children: <Widget>[
             const SizedBox(
