@@ -1,5 +1,4 @@
 import 'package:ddx_trainer/repository/client/model/client.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../repository/msg/model/discussion_client_response.dart';

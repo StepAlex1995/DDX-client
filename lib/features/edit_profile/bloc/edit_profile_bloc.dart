@@ -1,7 +1,6 @@
-import 'package:bloc/bloc.dart';
 import 'package:ddx_trainer/repository/user_repository/abstract_user_repository.dart';
 import 'package:ddx_trainer/repository/user_repository/model/update_user_request_model.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/user_repository/model/user_response.dart';
 import '../../../text/text.dart';
@@ -33,7 +32,6 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
                   code: 500, msg: AppTxt.errorServerResponse));
             }
           } else {
-            //print("USER_EDIT = "+updateUserResponse.toString());
             var user = await userRepository.getSavedUser();
             user!.name = updateUserResponse.data!.clientUpdated!.name!;
             user.isMan = updateUserResponse.data!.clientUpdated!.isMan!;

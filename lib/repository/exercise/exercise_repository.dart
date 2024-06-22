@@ -27,7 +27,6 @@ class ExerciseRepository extends AbstractExerciseRepository {
         headers: getHeaderWithToken(user.token),
       ),
     );
-    //print("data = "+response.data.toString());
     if (response.statusCode == 200) {
       ExerciseListResponse? data;
       try {

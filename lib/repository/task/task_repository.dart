@@ -48,7 +48,6 @@ class TaskRepository extends AbstractTaskRepository {
         headers: getHeaderWithToken(user.token),
       ),
     );
-    //print("data = "+response.data.toString());
     if (response.statusCode == 200) {
       TaskListResponse? data;
       try {

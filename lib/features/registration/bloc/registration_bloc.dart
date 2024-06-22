@@ -1,8 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:ddx_trainer/repository/user_repository/abstract_user_repository.dart';
 import 'package:ddx_trainer/repository/user_repository/model/auth_user.dart';
 import 'package:ddx_trainer/repository/user_repository/model/base_model.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/user_repository/model/reg_user.dart';
 import '../../../repository/user_repository/model/user_response.dart';
@@ -39,7 +38,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
                   code: 500, msg: AppTxt.errorServerResponse));
             }
           } else {
-            //authorization new user
+            ///authorization new user
             final userResponse = await userRepository.signIn(AuthUser(
                 login: event.regUser.login, password: event.regUser.password));
             if (userResponse.code != 200 || userResponse.data == null) {

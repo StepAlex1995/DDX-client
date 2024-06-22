@@ -1,21 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:google_fonts/google_fonts.dart';
 
-/*const backgroundColor = Color.fromARGB(255, 35, 39, 45);
-const primaryColor = Color.fromARGB(255, 236, 137, 48);
-const accentColor = Color.fromARGB(255, 0, 255, 0);
-const mainTextColor = Color.fromARGB(255, 255, 0, 255);
-*/
 
 final darkAppThem = ThemeData(
-  /*appBarTheme: const AppBarTheme(
-      centerTitle: true,
-      elevation: 0,
-      backgroundColor: primaryColor,
-      surfaceTintColor: primaryColor,
-      titleTextStyle: TextStyle(
-          color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),*/
   dividerColor: AppColor.semiWhite,
   primaryColor: AppColor.primaryColor,
   canvasColor: AppColor.transparentColor,
@@ -35,9 +22,7 @@ final darkAppThem = ThemeData(
   secondaryHeaderColor: Colors.grey,
   textSelectionTheme: TextSelectionThemeData(
     cursorColor: Colors.red,
-    // Change the cursor color. Change red to blue or as per your requirement
     selectionHandleColor: Colors.red,
-    // Change the selection handle color
     selectionColor:
         Colors.red.withOpacity(0.5), // Change the text selection color
   ),

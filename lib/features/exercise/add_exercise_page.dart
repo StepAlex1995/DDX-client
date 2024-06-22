@@ -34,114 +34,118 @@ class _AddExercisePageState extends State<AddExercisePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return CupertinoPageScaffold(
-        child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 50,
-          ),
-          Text(
-            AppTxt.titleExercise,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleLarge,
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          textDescription(AppTxt.descriptionAdditionalInfo, theme),
-          TextInput(
-            maxLines: 6,
-            onChange: (text) {
-              onChangeTextInput(text);
-            },
-            controller: descriptionController,
-            hint: "",
-            // AppTxt.descriptionTitleExample,
-            inputType: TextInputType.name,
-            inputAction: TextInputAction.done,
-            isPassword: false,
-          ),
-          BlocListener<ExerciseBloc, ExerciseState>(
-            bloc: _exerciseBloc,
-            listener: (context, state) {
-              if (state is ExerciseUploaded) {
-                AppRouter.goToPage(context,
-                    HomeTrainerPage(user: widget.user, indexTab: 1), true);
-              }
-            },
-            child: BlocBuilder<ExerciseBloc, ExerciseState>(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 50,
+            ),
+            Text(
+              AppTxt.titleExercise,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleLarge,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            textDescription(AppTxt.descriptionAdditionalInfo, theme),
+            TextInput(
+              maxLines: 6,
+              onChange: (text) {
+                onChangeTextInput(text);
+              },
+              controller: descriptionController,
+              hint: "",
+              // AppTxt.descriptionTitleExample,
+              inputType: TextInputType.name,
+              inputAction: TextInputAction.done,
+              isPassword: false,
+            ),
+            BlocListener<ExerciseBloc, ExerciseState>(
               bloc: _exerciseBloc,
-              builder: (context, state) {
-                if (state is ExerciseFailure) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          state.msg,
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 36.0, right: 36),
-                        child: RoundedButton(
-                          bgrColor: theme.primaryColor,
-                          text: AppTxt.btnAdd,
-                          textStyle: theme.textTheme.labelMedium,
-                          onPressed: () {},
-                        ),
-                      )
-                    ],
-                  );
-                } else if (state is ExerciseUploading) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 50),
-                      CircularProgressIndicator(
-                        color: theme.primaryColor,
-                      )
-                    ],
-                  );
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.only(
-                        left: 36.0, right: 36, top: 36, bottom: 36),
-                    child: RoundedButton(
-                      bgrColor: theme.primaryColor,
-                      text: AppTxt.btnAdd,
-                      textStyle: theme.textTheme.labelMedium,
-                      onPressed: () {
-                        uploadExercise();
-                      },
-                    ),
-                  );
+              listener: (context, state) {
+                if (state is ExerciseUploaded) {
+                  AppRouter.goToPage(context,
+                      HomeTrainerPage(user: widget.user, indexTab: 1), true);
                 }
               },
+              child: BlocBuilder<ExerciseBloc, ExerciseState>(
+                bloc: _exerciseBloc,
+                builder: (context, state) {
+                  if (state is ExerciseFailure) {
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            state.msg,
+                            style: theme.textTheme.bodySmall,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 36.0, right: 36),
+                          child: RoundedButton(
+                            bgrColor: theme.primaryColor,
+                            text: AppTxt.btnAdd,
+                            textStyle: theme.textTheme.labelMedium,
+                            onPressed: () {},
+                          ),
+                        )
+                      ],
+                    );
+                  } else if (state is ExerciseUploading) {
+                    return Column(
+                      children: [
+                        const SizedBox(height: 50),
+                        CircularProgressIndicator(
+                          color: theme.primaryColor,
+                        )
+                      ],
+                    );
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          left: 36.0, right: 36, top: 36, bottom: 36),
+                      child: RoundedButton(
+                        bgrColor: theme.primaryColor,
+                        text: AppTxt.btnAdd,
+                        textStyle: theme.textTheme.labelMedium,
+                        onPressed: () {
+                          uploadExercise();
+                        },
+                      ),
+                    );
+                  }
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   uploadExercise() {
-    _exerciseBloc.add(CopyExerciseEvent(
+    _exerciseBloc.add(
+      CopyExerciseEvent(
         user: widget.user,
         oldExerciseId: widget.exercise.id,
         exerciseRequest: AddExerciseRequest(
-            title: widget.exercise.title,
-            muscle: widget.exercise.muscle,
-            type: widget.exercise.type,
-            equipment: widget.exercise.equipment,
-            difficulty: widget.exercise.difficulty,
-            isPublic: false,
-            description: descriptionController.value.text,
-            state: 1)));
+          title: widget.exercise.title,
+          muscle: widget.exercise.muscle,
+          type: widget.exercise.type,
+          equipment: widget.exercise.equipment,
+          difficulty: widget.exercise.difficulty,
+          isPublic: false,
+          description: descriptionController.value.text,
+          state: 1,
+        ),
+      ),
+    );
   }
 
   void onChangeTextInput(String txt) {
-    //_editProfileBloc.add(EditProfileInitEvent());
     _exerciseBloc.add(ExerciseInitEvent());
   }
 

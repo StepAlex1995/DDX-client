@@ -1,7 +1,6 @@
 import 'package:ddx_trainer/features/exercise_list/exercise_list_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../../repository/user_repository/model/user_response.dart';
@@ -18,23 +17,17 @@ class HomeTrainerPage extends StatefulWidget {
   final int indexTab;
 
   @override
-  State<HomeTrainerPage> createState() =>
-      _HomeTrainerPageState(user: user, indexTab: indexTab);
+  State<HomeTrainerPage> createState() => _HomeTrainerPageState();
 }
 
 class _HomeTrainerPageState extends State<HomeTrainerPage> {
-  final User user;
-
-  _HomeTrainerPageState({required this.user, required this.indexTab});
-
   int currentIndex = 0;
-  final int indexTab;
 
   @override
   void initState() {
     super.initState();
     setState(() {
-      currentIndex = indexTab;
+      currentIndex = widget.indexTab;
     });
   }
 
@@ -78,15 +71,15 @@ class _HomeTrainerPageState extends State<HomeTrainerPage> {
         tabBuilder: (context, index) {
           switch (index) {
             case 0:
-              return ClientListPage(user: user);
+              return ClientListPage(user: widget.user);
             case 1:
-              return ExerciseListPage(user: user);
+              return ExerciseListPage(user: widget.user);
             case 2:
-              return DiscussionsPage(user: user);
+              return DiscussionsPage(user: widget.user);
             case 3:
               return ProfilePage(user: widget.user);
             default:
-              return ClientListPage(user: user);
+              return ClientListPage(user: widget.user);
           }
         });
   }

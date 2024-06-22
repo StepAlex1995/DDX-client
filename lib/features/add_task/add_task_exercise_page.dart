@@ -19,7 +19,6 @@ import '../../repository/exercise/model/exercise.dart';
 import '../../repository/user_repository/model/user_response.dart';
 import '../../text/text.dart';
 import '../exercise_list/bloc/exercise_list_bloc.dart';
-import '../exercise_list/widgets/exercise_list_widget.dart';
 import '../widgets/rounded_button.dart';
 import '../widgets/text_input.dart';
 
@@ -36,15 +35,10 @@ class AddTaskExercisePage extends StatefulWidget {
 
   @override
   State<AddTaskExercisePage> createState() =>
-      _AddTaskExercisePageState(user, client, date);
+      _AddTaskExercisePageState();
 }
 
 class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
-  final User user;
-  final Client client;
-  final DateTime date;
-
-  _AddTaskExercisePageState(this.user, this.client, this.date);
 
   final _exerciseListBloc =
       ExerciseListBloc(GetIt.I<AbstractExerciseRepository>());
@@ -57,7 +51,7 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
   void initState() {
     super.initState();
     _exerciseListBloc
-        .add(LoadExerciseListEvent(user: user, isPublicExerciseList: false));
+        .add(LoadExerciseListEvent(user: widget.user, isPublicExerciseList: false));
   }
 
   final TextEditingController weightController = TextEditingController();
@@ -83,7 +77,7 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final DateFormat formatter = DateFormat('dd.MM.yyyy');
-    String dateText = formatter.format(date);
+    String dateText = formatter.format(widget.date);
 
     return CupertinoPageScaffold(
         child: ListView(
@@ -92,7 +86,7 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
           height: 30,
         ),
         Text(
-          client.name,
+          widget.client.name,
           textAlign: TextAlign.center,
           style: theme.textTheme.titleLarge,
         ),
@@ -124,7 +118,7 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
                       children: [
                         Material(
                           child: ExerciseTile(
-                              exercise: selectedExercise!, user: user),
+                              exercise: selectedExercise!, user: widget.user),
                         ),
                         const SizedBox(
                           height: 8,
@@ -148,7 +142,6 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
                             style: theme.textTheme.bodyMedium,
                           ),
                         ),
-
 
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -327,7 +320,7 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
   }
 
   createTask() {
-    final simpleDate = DateTime(date.year, date.month, date.day);
+    final simpleDate = DateTime(widget.date.year, widget.date.month, widget.date.day);
     List<TaskParamRequest> taskParams = [];
 
     if (weightController.value.text.isNotEmpty) {
@@ -368,20 +361,19 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
 
     var createTaskRequest = CreateTaskRequest(
         date: simpleDate.toUtc().millisecondsSinceEpoch ~/ 1000,
-        clientId: client.id,
+        clientId: widget.client.id,
         exerciseId: selectedExercise!.id,
         description: descriptionController.value.text,
         state: 0,
         params: taskParams);
-    //print('createTaskRequest = $createTaskRequest');
     _addTaskBloc.add(
-        AddTaskUploadEvent(user: user, createTaskRequest: createTaskRequest));
+        AddTaskUploadEvent(user: widget.user, createTaskRequest: createTaskRequest));
   }
 
   closeAddTaskPage() {
     Navigator.pop(context);
     Navigator.pop(context);
-    AppRouter.goToPage(context, TaskListPage(user: user, client: client));
+    AppRouter.goToPage(context, TaskListPage(user: widget.user, client: widget.client));
   }
 
   setTaskBlocInit() {
@@ -389,7 +381,6 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
   }
 
   getExercise(Exercise exercise) {
-    //print("exe = $exerciseId");
     setState(() {
       selectedExercise = exercise;
       setTaskBlocInit();
@@ -404,6 +395,6 @@ class _AddTaskExercisePageState extends State<AddTaskExercisePage> {
 
   repeatLoadExercise() {
     _exerciseListBloc
-        .add(LoadExerciseListEvent(user: user, isPublicExerciseList: false));
+        .add(LoadExerciseListEvent(user: widget.user, isPublicExerciseList: false));
   }
 }

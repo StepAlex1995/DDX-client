@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:ddx_trainer/repository/task/abstract_task_repository.dart';
 import 'package:ddx_trainer/repository/task/model/task_list_request.dart';
 import 'package:ddx_trainer/repository/task/model/task_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/user_repository/model/user_response.dart';
 import '../../../text/text.dart';

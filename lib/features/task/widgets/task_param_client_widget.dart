@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../../../repository/task/model/task_model.dart';
 import '../../../text/text.dart';
 import '../../widgets/text_input.dart';
@@ -80,9 +78,7 @@ class TaskParamClientWidget extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: TextInput(
-                      onChange: (text) {
-                        //onChangeTextInput(text);
-                      },
+                      onChange: (text) {},
                       controller: controller,
                       icon: getIcon(),
                       hint: paramName,

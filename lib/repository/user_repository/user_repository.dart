@@ -43,14 +43,13 @@ class UserRepository extends AbstractUserRepository {
   @override
   Future<AppResponseModel<AuthUserResponse>> signIn(AuthUser authUser) async {
     final response = await dio.post(
-      '${Config.server}/auth/sign-in', //'http://81.94.150.234:8080
+      '${Config.server}/auth/sign-in',
       data: authUser.toJson(),
       options: Options(
         followRedirects: false,
         validateStatus: (status) {
           return status! < 600;
         },
-        //headers: headers,
       ),
     );
     if (response.statusCode == 200) {
@@ -71,7 +70,6 @@ class UserRepository extends AbstractUserRepository {
         validateStatus: (status) {
           return status! < 600;
         },
-        //headers: headers,
       ),
     );
     if (response.statusCode == 200) {
@@ -92,12 +90,7 @@ class UserRepository extends AbstractUserRepository {
   Future<AppResponseModel<UpdateUserResponseModel>> editProfile(
       User user, UpdateUserRequestModel updateUserModel) async {
     final Map<String, dynamic> header = getHeaderWithToken(user
-        .token); /*{
-      'Authorization': 'bearer ${user.token}',
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-      "Accept": "application/json"
-    };*/
+        .token);
     final response = await dio.put(
       '${Config.server}/api/clients/${user.clientId}',
       data: updateUserModel.toJson(),

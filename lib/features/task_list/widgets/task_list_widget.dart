@@ -1,6 +1,5 @@
 import 'package:ddx_trainer/features/task_list/bloc/task_list_bloc.dart';
 import 'package:ddx_trainer/features/task_list/widgets/task_tile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,53 +24,32 @@ class TaskListWidget extends StatefulWidget {
       : _taskListBloc = taskListBloc;
 
   @override
-  State<TaskListWidget> createState() => _TaskListWidgetState(
-      user: user, taskListBloc: _taskListBloc, actionRepeat, getTask: getTask);
+  State<TaskListWidget> createState() => _TaskListWidgetState();
 }
 
 class _TaskListWidgetState extends State<TaskListWidget> {
-  final User user;
-  final TaskListBloc _taskListBloc;
-
-  final Function() actionRepeat;
-  final Function(TaskModel) getTask;
-
-  _TaskListWidgetState(
-    this.actionRepeat, {
-    required this.user,
-    required TaskListBloc taskListBloc,
-    required this.getTask,
-  }) : _taskListBloc = taskListBloc;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return BlocBuilder<TaskListBloc, TaskListState>(
-        bloc: _taskListBloc,
+        bloc: widget._taskListBloc,
         builder: (context, state) {
           if (state is TaskListLoaded) {
-            return Column(
-              children: [
-                Flexible(
-                  child: Expanded(
-                      child: Material(
-                    child: ListView.separated(
-                      padding: const EdgeInsets.only(top: 16),
-                      itemBuilder: (context, i) {
-                        return TaskTile(
-                          task: state.taskList[i],
-                          user: user,
-                          getTask: getTask,
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return Divider(color: theme.dividerColor);
-                      },
-                      itemCount: state.taskList.length,
-                    ),
-                  )),
-                )
-              ],
+            return Material(
+              child: ListView.separated(
+                padding: const EdgeInsets.only(top: 16),
+                itemBuilder: (context, i) {
+                  return TaskTile(
+                    task: state.taskList[i],
+                    user: widget.user,
+                    getTask: widget.getTask,
+                  );
+                },
+                separatorBuilder: (context, index) {
+                  return Divider(color: theme.dividerColor);
+                },
+                itemCount: state.taskList.length,
+              ),
             );
           } else if (state is TaskListFailure) {
             return Column(

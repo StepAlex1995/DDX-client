@@ -30,22 +30,22 @@ class TaskTile extends StatelessWidget {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      star(theme,task.state),
-                      star(theme,task.state),
-                      star(theme,task.state),
+                      star(theme, task.state),
+                      star(theme, task.state),
+                      star(theme, task.state),
                     ],
                   );
                 case 1:
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      star(theme,task.state),
-                      star(theme,task.state),
+                      star(theme, task.state),
+                      star(theme, task.state),
                     ],
                   );
                 case 0:
                 default:
-                  return star(theme,task.state);
+                  return star(theme, task.state);
               }
             },
           ),
@@ -68,10 +68,10 @@ class TaskTile extends StatelessWidget {
   }
 
   Widget star(ThemeData theme, int taskState) {
-    return  Icon(
+    return Icon(
       size: 15,
       Icons.grade_outlined,
-      color:  taskState <=1 ? AppColor.primaryColor : AppColor.goodGrade,
+      color: taskState <= 1 ? AppColor.primaryColor : AppColor.goodGrade,
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:ddx_trainer/di/di.dart';
 import 'package:ddx_trainer/features/statistics/statistics_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +16,17 @@ class HomeClientPage extends StatefulWidget {
   final User user;
 
   @override
-  State<HomeClientPage> createState() => _HomeClientPageState(user: user);
+  State<HomeClientPage> createState() => _HomeClientPageState();
 }
 
 class _HomeClientPageState extends State<HomeClientPage> {
-  final User user;
-
-  _HomeClientPageState({required this.user});
+  /*void _onTap(int value) {
+    print('Value => $value');
+    if (value == 2) {
+      myHomeState.initState();
+    }
+    indexPrevValue = value;
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -61,11 +66,12 @@ class _HomeClientPageState extends State<HomeClientPage> {
         tabBuilder: (context, index) {
           switch (index) {
             case 0:
-              return TaskListPage(user: user, client: user.convertToClient());
+              return TaskListPage(
+                  user: widget.user, client: widget.user.convertToClient());
             case 1:
               return const StatisticsPage();
             case 2:
-              return DiscussionsPage(user: user);
+              return DiscussionsPage(user: widget.user);
             case 3:
               return ProfilePage(user: widget.user);
             default:

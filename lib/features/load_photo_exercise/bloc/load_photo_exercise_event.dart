@@ -1,7 +1,6 @@
 part of 'load_photo_exercise_bloc.dart';
 
-abstract class LoadPhotoExerciseEvent {
-}
+abstract class LoadPhotoExerciseEvent extends Equatable {}
 
 class LoadPhotoExerciseUploadInitEvent extends LoadPhotoExerciseEvent {
   final User user;

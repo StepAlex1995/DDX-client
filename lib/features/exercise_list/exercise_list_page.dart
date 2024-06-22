@@ -1,17 +1,12 @@
-import 'dart:async';
-
 import 'package:ddx_trainer/features/exercise/create_exercise_page.dart';
 import 'package:ddx_trainer/features/exercise_list/bloc/exercise_list_bloc.dart';
 import 'package:ddx_trainer/features/exercise/exercise_page.dart';
-import 'package:ddx_trainer/features/exercise_list/widgets/error_info.dart';
 import 'package:ddx_trainer/features/exercise_list/widgets/exercise_list_widget.dart';
-import 'package:ddx_trainer/features/exercise_list/widgets/exercise_tile.dart';
 import 'package:ddx_trainer/repository/exercise/abstract_exercise_repository.dart';
 import 'package:ddx_trainer/router/app_router.dart';
 import 'package:ddx_trainer/theme/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../repository/exercise/model/exercise.dart';
@@ -25,16 +20,13 @@ class ExerciseListPage extends StatefulWidget {
   final User user;
 
   @override
-  State<ExerciseListPage> createState() => _ExerciseListPageState(user);
+  State<ExerciseListPage> createState() => _ExerciseListPageState();
 }
 
 class _ExerciseListPageState extends State<ExerciseListPage> {
   int groupValue = 0;
-  final User user;
   final _exerciseListBloc =
       ExerciseListBloc(GetIt.I<AbstractExerciseRepository>());
-
-  _ExerciseListPageState(this.user);
 
   @override
   void initState() {
@@ -84,12 +76,12 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
                       setState(() {
                         this.groupValue = groupValue;
                         _exerciseListBloc.add(LoadExerciseListEvent(
-                            user: user, isPublicExerciseList: groupValue == 1));
+                            user: widget.user, isPublicExerciseList: groupValue == 1));
                       });
                     }),
               ),
               ExerciseListWidget(
-                user: user,
+                user: widget.user,
                 exerciseListBloc: _exerciseListBloc,
                 actionRepeat: loadExerciseList,
               ),
@@ -118,17 +110,17 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
   }
 
   goToExercise(Exercise exercise) {
-    AppRouter.goToPage(context, ExercisePage(user: user, exercise: exercise));
+    AppRouter.goToPage(context, ExercisePage(user: widget.user, exercise: exercise));
   }
 
   goToCreateExercise() {
     AppRouter.goToPage(
-        context, CreateExercisePage(user: user), false, loadExerciseList());
+        context, CreateExercisePage(user: widget.user), false, loadExerciseList());
   }
 
   loadExerciseList() {
     _exerciseListBloc.add(LoadExerciseListEvent(
-        user: user, isPublicExerciseList: groupValue == 1));
+        user: widget.user, isPublicExerciseList: groupValue == 1));
   }
 
   Widget buildSegment(String text, ThemeData theme) {

@@ -1,6 +1,6 @@
 part of 'exercise_list_bloc.dart';
 
-abstract class ExerciseListState  {}
+abstract class ExerciseListState extends Equatable {}
 
 final class ExerciseListInit extends ExerciseListState {
   @override

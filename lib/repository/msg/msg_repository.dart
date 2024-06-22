@@ -100,9 +100,6 @@ class MsgRepository extends AbstractMsgRepository {
         headers: getHeaderWithToken(user.token),
       ),
     );
-    print("realUri = "+response.realUri.toString());
-    print("statusCode = "+response.statusCode.toString());
-    print("data = "+response.data.toString());
     if (response.statusCode == 200) {
       DiscussionResponse? data;
       try {

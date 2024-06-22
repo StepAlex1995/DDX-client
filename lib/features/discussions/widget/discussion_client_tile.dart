@@ -1,7 +1,6 @@
 import 'package:ddx_trainer/features/msg/messenger_page.dart';
 import 'package:ddx_trainer/repository/msg/model/discussion_client_response.dart';
 import 'package:ddx_trainer/router/app_router.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../repository/user_repository/model/user_response.dart';
@@ -54,7 +53,6 @@ class DiscussionClientTile extends StatelessWidget {
         ),
         subtitle: Text(
           DateUtil.convertDate(discussionClient.taskDate, 'dd MMM yyyy'),
-          // discussionClient.taskDate.toString(),
           style: theme.textTheme.labelSmall?.copyWith(fontSize: 14),
         ),
         onTap: () {

@@ -17,9 +17,6 @@ abstract class AbstractAppRepository {
   Map<String, dynamic> getHeaderWithTokenForFileLoader(String token){
     return {
       'Authorization': 'bearer $token',
-      //"Content-Type": "application/json",
-      //"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-      //"Accept": "application/json"
     };
   }
 }

@@ -20,9 +20,6 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   @override
   void initState() {
-    /*GetIt.I<AbstractUserRepository>().saveUser(const SaveUserInfo(token: "123",
-        role: SaveUserInfo.CLIENT_ROLE, isFullUserProfile: false));*/
-    //GetIt.I<AbstractUserRepository>().logout();
     checkUser();
     super.initState();
   }
@@ -57,8 +54,9 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return const CupertinoPageScaffold(
-        child: BgrImg(
-      assetImg: AssetImage('assets/img/bgr_auth1.jpg'),
-    ));
+      child: BgrImg(
+        assetImg: AssetImage('assets/img/bgr_auth1.jpg'),
+      ),
+    );
   }
 }

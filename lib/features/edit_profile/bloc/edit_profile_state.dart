@@ -1,7 +1,6 @@
 part of 'edit_profile_bloc.dart';
 
-@immutable
-sealed class EditProfileState {}
+abstract class EditProfileState {}
 
 final class EditProfileInitState extends EditProfileState {}
 

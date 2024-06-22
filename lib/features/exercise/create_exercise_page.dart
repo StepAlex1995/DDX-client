@@ -9,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../repository/exercise/model/exercise.dart';
-import '../../repository/user_repository/abstract_user_repository.dart';
 import '../../repository/user_repository/model/user_response.dart';
 import '../../text/text.dart';
 import '../../theme/theme.dart';
@@ -23,16 +22,10 @@ class CreateExercisePage extends StatefulWidget {
   CreateExercisePage({super.key, required this.user, this.exercise});
 
   @override
-  State<CreateExercisePage> createState() =>
-      _CreateExercisePageState(user: user, exercise: exercise);
+  State<CreateExercisePage> createState() => _CreateExercisePageState();
 }
 
 class _CreateExercisePageState extends State<CreateExercisePage> {
-  final User user;
-  Exercise? exercise;
-
-  _CreateExercisePageState({required this.user, this.exercise});
-
   void onChangeTextInput(String txt) {
     //_editProfileBloc.add(EditProfileInitEvent());
     _exerciseBloc.add(ExerciseInitEvent());
@@ -54,7 +47,6 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
     super.initState();
     _exerciseBloc.add(ExerciseInitEvent());
   }
-
 
   @override
   void dispose() {
@@ -113,9 +105,7 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
                 },
               ),
               /////
-              SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               textDescription(AppTxt.descriptionType, theme),
               dropdown(
                 context,
@@ -128,9 +118,7 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
                 },
               ),
               /////
-              SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               textDescription(AppTxt.descriptionEquipment, theme),
               dropdown(
                 context,
@@ -142,9 +130,7 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
                   })
                 },
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               textDescription(AppTxt.descriptionDifficulty, theme),
               dropdown(
                 context,
@@ -165,7 +151,7 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
                   onChangeTextInput(text);
                 },
                 controller: descriptionController,
-               // icon: CupertinoIcons.info_circle_fill,
+                // icon: CupertinoIcons.info_circle_fill,
                 hint: "",
                 // AppTxt.descriptionTitleExample,
                 inputType: TextInputType.name,
@@ -241,12 +227,12 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
 
   goToLoadPhotoExercise(int exerciseId) {
     AppRouter.goToPage(
-        context, LoadPhotoExercise(user: user, exerciseId: exerciseId));
+        context, LoadPhotoExercise(user: widget.user, exerciseId: exerciseId));
   }
 
   uploadExercise() {
     _exerciseBloc.add(UploadExerciseEvent(
-        user: user,
+        user: widget.user,
         exerciseRequest: AddExerciseRequest(
             title: titleController.value.text,
             muscle: muscleValue,
@@ -276,27 +262,27 @@ class _CreateExercisePageState extends State<CreateExercisePage> {
     final theme = Theme.of(context);
 
     return Material(
-        child: DropdownButtonFormField(
-      //disabledHint: Text('123',style: theme.textTheme.,),
-      style: theme.textTheme.labelSmall,
-      decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColor.appGrey, width: 2),
-          borderRadius: BorderRadius.circular(20),
+      child: DropdownButtonFormField(
+        style: theme.textTheme.labelSmall,
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: AppColor.appGrey, width: 2),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          border: OutlineInputBorder(
+            borderSide: const BorderSide(color: AppColor.appGrey, width: 2),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          filled: true,
+          fillColor: AppColor.appGrey,
         ),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColor.appGrey, width: 2),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        filled: true,
-        fillColor: AppColor.appGrey,
+        focusColor: AppColor.appGrey,
+        borderRadius: BorderRadius.circular(20),
+        dropdownColor: AppColor.appGrey,
+        value: emptyDataDropdown,
+        onChanged: onChange,
+        items: items,
       ),
-      focusColor: AppColor.appGrey,
-      borderRadius: BorderRadius.circular(20),
-      dropdownColor: AppColor.appGrey,
-      value: emptyDataDropdown,
-      onChanged: onChange,
-      items: items,
-    ));
+    );
   }
 }

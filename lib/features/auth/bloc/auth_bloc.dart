@@ -1,6 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:ddx_trainer/repository/user_repository/model/auth_user.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/user_repository/abstract_user_repository.dart';
 import '../../../repository/user_repository/model/user_response.dart';

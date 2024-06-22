@@ -25,16 +25,10 @@ class TaskListPage extends StatefulWidget {
   final Client client;
 
   @override
-  State<TaskListPage> createState() =>
-      _TaskListPageState(user: user, client: client);
+  State<TaskListPage> createState() => _TaskListPageState();
 }
 
 class _TaskListPageState extends State<TaskListPage> {
-  final User user;
-  final Client client;
-
-  _TaskListPageState({required this.user, required this.client});
-
   final _taskListBloc = TaskListBloc(GetIt.I<AbstractTaskRepository>());
 
   DateTime selectedDay = DateTime.now();
@@ -55,118 +49,117 @@ class _TaskListPageState extends State<TaskListPage> {
     final theme = Theme.of(context);
 
     return CupertinoPageScaffold(
-        child: ListView(
-          children: <Widget>[
-            const SizedBox(
-              height: 10,
+      child: ListView(
+        children: <Widget>[
+          const SizedBox(
+            height: 10,
+          ),
+          Text(
+            AppTxt.tabTasks,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleLarge,
+          ),
+          Material(
+            child: TableCalendar(
+              calendarStyle: CalendarStyle(
+                  isTodayHighlighted: true,
+                  holidayDecoration: BoxDecoration(
+                    color: AppColor.transparentColor,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  weekendDecoration: BoxDecoration(
+                    color: AppColor.transparentColor,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  todayDecoration: BoxDecoration(
+                    color: AppColor.darkBackgroundColor,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  defaultDecoration: BoxDecoration(
+                    color: AppColor.transparentColor,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  selectedDecoration: BoxDecoration(
+                    color: AppColor.primaryColor,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  selectedTextStyle:
+                      const TextStyle(color: AppColor.mainTextColor)),
+              headerStyle: const HeaderStyle(
+                formatButtonVisible: false,
+                titleCentered: true,
+                formatButtonShowsNext: false,
+              ),
+              onDaySelected: (selectDay, focusDay) {
+                setState(() {
+                  selectedDay =
+                      DateTime(selectDay.year, selectDay.month, selectDay.day);
+                  focusedDay = focusDay;
+                  getTaskList();
+                });
+              },
+              selectedDayPredicate: (date) {
+                return isSameDay(selectedDay, date);
+              },
+              onPageChanged: (day) {},
+              daysOfWeekVisible: true,
+              daysOfWeekHeight: 30,
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              weekendDays: const [6, 7],
+              onFormatChanged: (dae) {},
+              calendarFormat: CalendarFormat.twoWeeks,
+              firstDay: DateTime.utc(2020, 10, 16),
+              lastDay: DateTime.utc(2050, 3, 14),
+              focusedDay: focusedDay,
             ),
-            Text(
-              AppTxt.tabTasks,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.titleLarge,
-            ),
-            Material(
-              child: TableCalendar(
-                calendarStyle: CalendarStyle(
-                    isTodayHighlighted: true,
-                    holidayDecoration: BoxDecoration(
-                      color: AppColor.transparentColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    weekendDecoration: BoxDecoration(
-                      color: AppColor.transparentColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    todayDecoration: BoxDecoration(
-                      color: AppColor.darkBackgroundColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    defaultDecoration: BoxDecoration(
-                      color: AppColor.transparentColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    selectedDecoration: BoxDecoration(
-                      color: AppColor.primaryColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    selectedTextStyle:
-                        const TextStyle(color: AppColor.mainTextColor)),
-                headerStyle: const HeaderStyle(
-                  formatButtonVisible: false,
-                  titleCentered: true,
-                  formatButtonShowsNext: false,
-                ),
-                onDaySelected: (selectDay, focusDay) {
-                  setState(() {
-                    selectedDay = DateTime(
-                        selectDay.year, selectDay.month, selectDay.day);
-                    focusedDay = focusDay;
-                    getTaskList();
-                  });
-                },
-                selectedDayPredicate: (date) {
-                  return isSameDay(selectedDay, date);
-                },
-                onPageChanged: (day) {
-
-                },
-                daysOfWeekVisible: true,
-                daysOfWeekHeight: 30,
-                startingDayOfWeek: StartingDayOfWeek.monday,
-                weekendDays: const [6, 7],
-                onFormatChanged: (dae) {},
-                calendarFormat: CalendarFormat.twoWeeks,
-                firstDay: DateTime.utc(2020, 10, 16),
-                lastDay: DateTime.utc(2050, 3, 14),
-                focusedDay: focusedDay,
+          ),
+          SizedBox(
+            height: 450,
+            child: Container(
+              color: AppColor.backgroundColor,
+              child: TaskListWidget(
+                user: widget.user,
+                taskListBloc: _taskListBloc,
+                actionRepeat: getTaskList,
+                getTask: selectTask,
               ),
             ),
-            SizedBox(
-              height: 450,
-              child: Container(
-                color: AppColor.backgroundColor,
-                child: TaskListWidget(
-                  user: user,
-                  taskListBloc: _taskListBloc,
-                  actionRepeat: getTaskList,
-                  getTask: selectTask,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 32,
-            ),
-            Builder(builder: (context) {
-              var currentDate = DateTime(DateTime.now().year,
-                  DateTime.now().month, DateTime.now().day);
-              if (user.role == User.TRAINER_ROLE &&
-                  selectedDay.toUtc().millisecondsSinceEpoch >=
-                      currentDate.toUtc().millisecondsSinceEpoch) {
-                return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 54.0),
-                    child: RoundedButton(
-                      bgrColor: theme.primaryColor,
-                      text: AppTxt.btnAddTask,
-                      textStyle: theme.textTheme.labelMedium,
-                      onPressed: () {
-                        goToAddTaskPage(context);
-                      },
-                    ));
-              } else {
-                return Container();
-              }
-            }),
-          ],
-        ));
+          ),
+          const SizedBox(height: 32),
+          Builder(builder: (context) {
+            var currentDate = DateTime(
+                DateTime.now().year, DateTime.now().month, DateTime.now().day);
+            if (widget.user.role == User.TRAINER_ROLE &&
+                selectedDay.toUtc().millisecondsSinceEpoch >=
+                    currentDate.toUtc().millisecondsSinceEpoch) {
+              return Padding(
+                  padding: const EdgeInsets.only(left: 54.0,right: 54.0,bottom: 24),
+                  child: RoundedButton(
+                    bgrColor: theme.primaryColor,
+                    text: AppTxt.btnAddTask,
+                    textStyle: theme.textTheme.labelMedium,
+                    onPressed: () {
+                      goToAddTaskPage(context);
+                    },
+                  ));
+            } else {
+              return Container();
+            }
+          }),
+        ],
+      ),
+    );
   }
 
   selectTask(TaskModel task) {
-    if(user.role == User.TRAINER_ROLE) {
+    if (widget.user.role == User.TRAINER_ROLE) {
       AppRouter.goToPage(
-          context, TaskTrainerPage(user: user, client: client, task: task));
-    }else {
-      AppRouter.goToPage(
-          context, TaskClientPage(user: user, client: client, task: task));
+          context,
+          TaskTrainerPage(
+              user: widget.user, client: widget.client, task: task));
+    } else {
+      AppRouter.goToPage(context,
+          TaskClientPage(user: widget.user, client: widget.client, task: task));
     }
   }
 
@@ -174,8 +167,8 @@ class _TaskListPageState extends State<TaskListPage> {
     AppRouter.goToPage(
         context,
         AddTaskExercisePage(
-          user: user,
-          client: client,
+          user: widget.user,
+          client: widget.client,
           date: selectedDay,
         ));
   }
@@ -183,11 +176,12 @@ class _TaskListPageState extends State<TaskListPage> {
   getTaskList() {
     setState(() {
       _taskListBloc.add(LoadTaskListEvent(
-          user: user,
-          taskListRequest: TaskListRequest(
-            date: selectedDay.toUtc().millisecondsSinceEpoch ~/ 1000,
-            clientId: client.id,
-          )));
+        user: widget.user,
+        taskListRequest: TaskListRequest(
+          date: selectedDay.toUtc().millisecondsSinceEpoch ~/ 1000,
+          clientId: widget.client.id,
+        ),
+      ));
     });
   }
 }

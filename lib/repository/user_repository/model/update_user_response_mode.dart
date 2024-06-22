@@ -5,14 +5,14 @@ class UpdateUserResponseModel {
 
   UpdateUserResponseModel.fromJson(Map<String, dynamic> json) {
     clientUpdated = json['clientUpdated'] != null
-        ? new ClientUpdated.fromJson(json['clientUpdated'])
+        ? ClientUpdated.fromJson(json['clientUpdated'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (clientUpdated != null) {
-      data['clientUpdated'] = this.clientUpdated!.toJson();
+      data['clientUpdated'] = clientUpdated!.toJson();
     }
     return data;
   }
@@ -49,13 +49,13 @@ class ClientUpdated {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['is_man'] = this.isMan;
-    data['phone'] = this.phone;
-    data['birth_date'] = this.birthDate;
-    data['trainer_id'] = this.trainerId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['is_man'] = isMan;
+    data['phone'] = phone;
+    data['birth_date'] = birthDate;
+    data['trainer_id'] = trainerId;
     return data;
   }
 

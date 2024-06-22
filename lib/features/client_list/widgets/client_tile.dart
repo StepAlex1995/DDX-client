@@ -1,5 +1,4 @@
 import 'package:ddx_trainer/features/client/client_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../repository/client/model/client.dart';

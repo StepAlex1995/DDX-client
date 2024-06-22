@@ -1,6 +1,5 @@
 import 'package:ddx_trainer/repository/exercise/model/exercise.dart';
 import 'package:ddx_trainer/theme/theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../repository/user_repository/model/user_response.dart';

@@ -1,6 +1,5 @@
 import 'package:ddx_trainer/features/widgets/rounded_button.dart';
 import 'package:ddx_trainer/theme/theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../text/text.dart';
@@ -50,11 +49,7 @@ class ErrorInfo extends StatelessWidget {
                     btnAction!();
                   },
                 ),
-              ); /*TextButton(
-                  onPressed: () {
-                    btnAction!();
-                  },
-                  child: Text(textBtn ?? AppTxt.errBtnTextDefault));*/
+              );
             } else {
               return Container();
             }

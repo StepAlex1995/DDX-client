@@ -24,60 +24,43 @@ class ExerciseListWidget extends StatefulWidget {
       this.getExercise});
 
   @override
-  State<ExerciseListWidget> createState() => _ExerciseListWidgetState(
-      user: user,
-      exerciseListBloc: exerciseListBloc,
-      actionRepeat,
-      getExercise);
+  State<ExerciseListWidget> createState() => _ExerciseListWidgetState();
 }
 
 class _ExerciseListWidgetState extends State<ExerciseListWidget> {
-  final User user;
-  final ExerciseListBloc _exerciseListBloc;
-  final Function() actionRepeat;
-  final Function(Exercise)? getExercise;
-
-  _ExerciseListWidgetState(this.actionRepeat, this.getExercise,
-      {required this.user, required ExerciseListBloc exerciseListBloc})
-      : _exerciseListBloc = exerciseListBloc;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return BlocBuilder<ExerciseListBloc, ExerciseListState>(
-        bloc: _exerciseListBloc,
+        bloc: widget.exerciseListBloc,
         builder: (context, state) {
           if (state is ExerciseListLoaded) {
             return Expanded(
-                child: Material(
-              child: ListView.separated(
-                padding: const EdgeInsets.only(top: 16),
-                itemBuilder: (context, i) {
-                  return ExerciseTile(
-                    exercise: state.exerciseList[i],
-                    user: user,
-                    getExercise: getExercise,
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    color: theme.dividerColor,
-                  );
-                },
-                itemCount: state.exerciseList.length,
+              child: Material(
+                child: ListView.separated(
+                  padding: const EdgeInsets.only(top: 16),
+                  itemBuilder: (context, i) {
+                    return ExerciseTile(
+                      exercise: state.exerciseList[i],
+                      user: widget.user,
+                      getExercise: widget.getExercise,
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return Divider(
+                      color: theme.dividerColor,
+                    );
+                  },
+                  itemCount: state.exerciseList.length,
+                ),
               ),
-            ));
+            );
           } else if (state is ExerciseListFailure) {
             return Column(
               children: [
                 const SizedBox(height: 250),
                 ErrorInfo(
-                  /*btnAction: () {
-                    state.code == 200
-                        ? null
-                        : actionRepeat(); //loadExerciseList();
-                  },*/
                   textTitle: state.code == 200 ? state.msg : null,
                   textDescription: state.code == 200
                       ? AppTxt.exerciseListEmptyDescription

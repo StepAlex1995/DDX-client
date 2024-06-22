@@ -1,5 +1,5 @@
-import 'package:bloc/bloc.dart';
 import 'package:ddx_trainer/repository/msg/model/send_msg_request.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/msg/abstract_msg_repository.dart';
 import '../../../repository/user_repository/model/user_response.dart';

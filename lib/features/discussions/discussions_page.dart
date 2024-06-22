@@ -21,12 +21,16 @@ class DiscussionsPage extends StatefulWidget {
   State<DiscussionsPage> createState() => _DiscussionsPageState();
 }
 
-class _DiscussionsPageState extends State<DiscussionsPage> {
+class _DiscussionsPageState extends State<DiscussionsPage> with AutomaticKeepAliveClientMixin {
   final _discussionBloc = DiscussionBloc(GetIt.I<AbstractMsgRepository>());
 
   @override
   void initState() {
     super.initState();
+    updateDiscussionList();
+  }
+
+  updateDiscussionList(){
     if (widget.user.role == User.CLIENT_ROLE) {
       _discussionBloc.add(LoadDiscussionClientEvent(user: widget.user));
     } else {
@@ -36,8 +40,8 @@ class _DiscussionsPageState extends State<DiscussionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final theme = Theme.of(context);
-
     return CupertinoPageScaffold(
       backgroundColor: AppColor.backgroundColor,
       child: SafeArea(
@@ -45,7 +49,7 @@ class _DiscussionsPageState extends State<DiscussionsPage> {
           children: [
             Center(
               child: Padding(
-                padding: const EdgeInsets.only(top: 20.0,bottom: 16),
+                padding: const EdgeInsets.only(top: 20.0, bottom: 16),
                 child: Container(
                   alignment: Alignment.center,
                   child: Text(
@@ -56,37 +60,38 @@ class _DiscussionsPageState extends State<DiscussionsPage> {
                 ),
               ),
             ),
-            //////
             BlocBuilder<DiscussionBloc, DiscussionState>(
                 bloc: _discussionBloc,
                 builder: (context, state) {
                   if (state is DiscussionLoadedState) {
                     return Expanded(
-                        child: Material(
-                      child: ListView.separated(
-                        padding: const EdgeInsets.only(top: 16),
-                        itemBuilder: (context, i) {
-                          if (widget.user.role == User.CLIENT_ROLE) {
-                            return DiscussionClientTile(
-                                user: widget.user,
-                                discussionClient: state.discussionList[i]);
-                          } else {
-                            return DiscussionTrainerTail(
-                                user: widget.user,
-                                discussion: state.discussionList[i]);
-                          }
-                        },
-                        separatorBuilder: (context, index) {
-                          return Divider(
-                            color: theme.dividerColor,
-                          );
-                        },
-                        itemCount: state.discussionList.length,
+                      child: Material(
+                        child: ListView.separated(
+                          padding: const EdgeInsets.only(top: 16),
+                          itemBuilder: (context, i) {
+                            if (widget.user.role == User.CLIENT_ROLE) {
+                              return DiscussionClientTile(
+                                  user: widget.user,
+                                  discussionClient: state.discussionList[i]);
+                            } else {
+                              return DiscussionTrainerTail(
+                                  user: widget.user,
+                                  discussion: state.discussionList[i]);
+                            }
+                          },
+                          separatorBuilder: (context, index) {
+                            return Divider(
+                              color: theme.dividerColor,
+                            );
+                          },
+                          itemCount: state.discussionList.length,
+                        ),
                       ),
-                    ));
+                    );
                   } else if (state is DiscussionFailureState) {
                     return Padding(
-                      padding: const EdgeInsets.only(top: 250.0,left: 20,right: 20),
+                      padding: const EdgeInsets.only(
+                          top: 250.0, left: 20, right: 20),
                       child: ErrorInfo(
                         textTitle: state.code == 200 ? state.msg : null,
                         textDescription: state.code == 200
@@ -107,10 +112,12 @@ class _DiscussionsPageState extends State<DiscussionsPage> {
                     );
                   }
                 }),
-            //////
           ],
         ),
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => false;
 }

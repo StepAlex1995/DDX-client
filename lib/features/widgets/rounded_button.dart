@@ -24,11 +24,11 @@ class RoundedButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         child: CupertinoButton(
+          onPressed: onPressed,
           child: Text(
             text,
             style: textStyle,
           ),
-          onPressed: onPressed,
         ),
       ),
     );

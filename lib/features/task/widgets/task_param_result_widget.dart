@@ -1,5 +1,4 @@
 import 'package:ddx_trainer/repository/task/model/task_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../text/text.dart';
@@ -32,7 +31,6 @@ class TaskParamResultWidget extends StatelessWidget {
                 textDirection: TextDirection.ltr,
                 children: [
                   Text(
-                    //AppTxt.setCount,
                     paramName,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.titleSmall,

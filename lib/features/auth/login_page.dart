@@ -60,7 +60,6 @@ class _LoginPageState extends State<LoginPage> {
             decoration: const BoxDecoration(
               color: Colors.transparent,
             ),
-            //backgroundColor: Colors.transparent,
             child: SafeArea(
               child: ListView(
                 children: [
@@ -240,11 +239,14 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   authorization() {
-    _authBloc.add(AuthUserEvent(
+    _authBloc.add(
+      AuthUserEvent(
         authUser: AuthUser(
-      login: loginController.text,
-      password: passwordController.text,
-    )));
+          login: loginController.text,
+          password: passwordController.text,
+        ),
+      ),
+    );
   }
 
   goToRegistrationPage() {

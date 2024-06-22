@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/task/abstract_task_repository.dart';
 import '../../../repository/task/model/update_task_request.dart';

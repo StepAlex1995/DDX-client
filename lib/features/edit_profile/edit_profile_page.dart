@@ -22,13 +22,10 @@ class EditProfilePage extends StatefulWidget {
   final User user;
 
   @override
-  State<EditProfilePage> createState() => _EditProfilePageState(user);
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  final User user;
-
-  _EditProfilePageState(this.user);
 
   final _editProfileBloc = EditProfileBloc(GetIt.I<AbstractUserRepository>());
 
@@ -208,7 +205,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     String dateString = dateFormat.format(birthDate);
 
     _editProfileBloc.add(TryEditProfileEvent(
-        user: user,
+        user: widget.user,
         updateUserModel: UpdateUserRequestModel(
           name: nameController.text,
           isMan: isMan,

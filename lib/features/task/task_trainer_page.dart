@@ -49,9 +49,7 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
     return CupertinoPageScaffold(
         child: ListView(
       children: [
-        const SizedBox(
-          height: 10,
-        ),
+        const SizedBox(height: 10),
         Text(
           AppTxt.titleTask,
           textAlign: TextAlign.center,
@@ -132,7 +130,6 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
           task: widget.task,
           paramName: TaskModel.PARAM_TIME_MAX,
         ),
-        //Builder(builder: (context) {}),
         Builder(builder: (context) {
           if (widget.task.state < 2) {
             return Container();
@@ -141,13 +138,16 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
             return Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 28.0,left: 20,right: 20),
+                  padding:
+                      const EdgeInsets.only(top: 28.0, left: 20, right: 20),
                   child: Text(
                     AppTxt.gradeTrainerCompleteForTrainer +
                         widget.task.feedbackTrainer.toString(),
                     textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium!
-                        .copyWith(color: getColorByGradeTrainer(widget.task.feedbackTrainer),fontSize: 20),
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                        color:
+                            getColorByGradeTrainer(widget.task.feedbackTrainer),
+                        fontSize: 20),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -239,8 +239,9 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
                   AppTxt.difficultyClientCompleteForTrainer +
                       widget.task.feedbackClient.toString(),
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium!
-                      .copyWith(color: getColorByGradeClient(widget.task.feedbackClient),fontSize: 20),
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                      color: getColorByGradeClient(widget.task.feedbackClient),
+                      fontSize: 20),
                 ),
                 const SizedBox(height: 24),
               ],
@@ -249,7 +250,8 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
             return Container();
           }
         }),
-        /////
+
+        ///
         Padding(
           padding: const EdgeInsets.all(36.0),
           child: RoundedButton(
@@ -265,22 +267,21 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
     ));
   }
 
-
-  MaterialColor getColorByGradeClient(int grade){
+  MaterialColor getColorByGradeClient(int grade) {
     if (grade >= 4) {
       return AppColor.badGrade;
     }
-    if(grade <=2){
+    if (grade <= 2) {
       return AppColor.goodGrade;
     }
     return AppColor.okGrade;
   }
 
-  MaterialColor getColorByGradeTrainer(int grade){
+  MaterialColor getColorByGradeTrainer(int grade) {
     if (grade >= 4) {
       return AppColor.goodGrade;
     }
-    if(grade <=2){
+    if (grade <= 2) {
       return AppColor.badGrade;
     }
     return AppColor.okGrade;

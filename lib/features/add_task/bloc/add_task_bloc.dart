@@ -1,7 +1,5 @@
-import 'package:bloc/bloc.dart';
-import 'package:ddx_trainer/features/client_list/bloc/client_list_bloc.dart';
 import 'package:ddx_trainer/repository/task/model/create_task_request.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/task/abstract_task_repository.dart';
 import '../../../repository/user_repository/model/user_response.dart';
@@ -16,9 +14,6 @@ class AddTaskBloc extends Bloc<AddTaskEvent, AddTaskState> {
 
   AddTaskBloc(this.taskRepository) : super(AddTaskInit()) {
     on<AddTaskUploadEvent>((event, emit) async {
-      //emit(AddTaskFailure(code: 500, msg: AppTxt.errorServerResponse));
-      //emit(AddTaskUploading());
-      //return;
       try {
         emit(AddTaskUploading());
         final addTaskResponse = await taskRepository.createNewTask(

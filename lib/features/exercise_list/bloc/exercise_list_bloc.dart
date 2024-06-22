@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/exercise/abstract_exercise_repository.dart';
 import '../../../repository/exercise/model/exercise.dart';

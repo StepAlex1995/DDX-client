@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/client/abstract_client_repository.dart';
 import '../../../repository/client/model/client.dart';
@@ -17,12 +17,10 @@ class ClientListBloc extends Bloc<ClientListEvent, ClientListState> {
 
   ClientListBloc(this.clientRepository) : super(ClientListInit()) {
     on<LoadClientListEvent>((event, emit) async {
-
       try {
         if (state is! ClientListLoaded) {
           emit(ClientListLoading());
         }
-
         final clientResponse =
             await clientRepository.loadClientList(event.user);
 

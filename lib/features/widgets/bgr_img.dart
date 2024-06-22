@@ -8,21 +8,24 @@ class BgrImg extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShaderMask(
-        shaderCallback: (bounds) => const LinearGradient(
-              colors: [Colors.black, Colors.black12],
-              begin: Alignment.bottomCenter,
-              end: Alignment.center,
-            ).createShader(bounds),
-        blendMode: BlendMode.darken,
-        child: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: assetImg, //'assets/img/bgr_auth1.png'),
-                  fit: BoxFit.cover,
-                  colorFilter: const ColorFilter.mode(
-                    Colors.black45,
-                    BlendMode.darken,
-                  ))),
-        ));
+      shaderCallback: (bounds) => const LinearGradient(
+        colors: [Colors.black, Colors.black12],
+        begin: Alignment.bottomCenter,
+        end: Alignment.center,
+      ).createShader(bounds),
+      blendMode: BlendMode.darken,
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: assetImg, 
+            fit: BoxFit.cover,
+            colorFilter: const ColorFilter.mode(
+              Colors.black45,
+              BlendMode.darken,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

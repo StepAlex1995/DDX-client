@@ -10,27 +10,28 @@ class StatisticsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return  CupertinoPageScaffold(
-        child: Padding(
-      padding: const EdgeInsets.only(top: 50.0),
-      child: Column(
-        children: [
-          Text(
-            AppTxt.tabState,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.titleLarge,
-          ),
-          const Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 300.0),
-              child: ErrorInfo(
-                textTitle: AppTxt.inDeveloping,
-                textDescription: AppTxt.inDevelopingDescription,
+    return CupertinoPageScaffold(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 50.0),
+        child: Column(
+          children: [
+            Text(
+              AppTxt.tabState,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleLarge,
+            ),
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 300.0),
+                child: ErrorInfo(
+                  textTitle: AppTxt.inDeveloping,
+                  textDescription: AppTxt.inDevelopingDescription,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

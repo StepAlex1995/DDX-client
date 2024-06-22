@@ -2,10 +2,14 @@ import 'dart:async';
 
 import 'package:ddx_trainer/features/msg/bloc/msg_bloc.dart';
 import 'package:ddx_trainer/features/msg/bloc/msg_list_bloc.dart';
+import 'package:ddx_trainer/features/task/task_client_page.dart';
+import 'package:ddx_trainer/features/task/task_trainer_page.dart';
 import 'package:ddx_trainer/repository/client/model/client.dart';
+import 'package:ddx_trainer/repository/exercise/model/exercise.dart';
 import 'package:ddx_trainer/repository/msg/abstract_msg_repository.dart';
 import 'package:ddx_trainer/repository/msg/model/send_msg_request.dart';
 import 'package:ddx_trainer/repository/task/model/task_model.dart';
+import 'package:ddx_trainer/router/app_router.dart';
 import 'package:ddx_trainer/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -70,19 +74,7 @@ class _MessengerPageState extends State<MessengerPage> {
         child: Stack(
           children: [
             Column(
-              children: [
-                Container(
-                    color: AppColor.darkBackgroundColor,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ExerciseTile(
-                          exercise: widget.task.exercise, user: widget.user),
-                    )),
-                bodyChat(),
-                const SizedBox(
-                  height: 140,
-                )
-              ],
+              children: [header(), bodyChat(), const SizedBox(height: 140)],
             ),
             formChat(),
           ],
@@ -91,14 +83,49 @@ class _MessengerPageState extends State<MessengerPage> {
     );
   }
 
+  Widget header() {
+    return Container(
+      color: AppColor.darkBackgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: ExerciseTile(
+          exercise: widget.task.exercise,
+          user: widget.user,
+          getExercise: goToTask,
+        ),
+      ),
+    );
+  }
+
+  goToTask(Exercise e) {
+    if (widget.user.role == User.CLIENT_ROLE) {
+      AppRouter.goToPage(
+          context,
+          TaskClientPage(
+            user: widget.user,
+            client: widget.client,
+            task: widget.task,
+          ));
+    } else if (widget.user.role == User.TRAINER_ROLE) {
+      AppRouter.goToPage(
+          context,
+          TaskTrainerPage(
+            user: widget.user,
+            client: widget.client,
+            task: widget.task,
+          ));
+    }
+  }
+
   scrollToBottom() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 50),
-        //curve: Curves.easeOut,
-        curve: Curves.easeInOut,
-      );
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 50),
+          curve: Curves.easeInOut,
+        );
+      }
     });
   }
 
@@ -133,8 +160,6 @@ class _MessengerPageState extends State<MessengerPage> {
                         DateUtil.convertDate(
                             state.msgList[idx].date, 'dd MMM HH:mm'),
                       );
-                      //convertDate(state.msgList[idx].date)
-                      //);
                     });
               }
               return ListView(
@@ -296,16 +321,17 @@ class _MessengerPageState extends State<MessengerPage> {
       return;
     }
     _msgBloc.add(SendMsgEvent(
-        user: widget.user,
-        sendMsgRequest: SendMsgRequest(
-          taskId: widget.task.id,
-          trainerId: widget.user.role == User.CLIENT_ROLE
-              ? widget.user.trainerId
-              : widget.user.selfTrainerId,
-          clientId: widget.client.id,
-          text: textMsgController.value.text,
-          date: DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000,
-          isSendClient: widget.user.role == User.CLIENT_ROLE,
-        )));
+      user: widget.user,
+      sendMsgRequest: SendMsgRequest(
+        taskId: widget.task.id,
+        trainerId: widget.user.role == User.CLIENT_ROLE
+            ? widget.user.trainerId
+            : widget.user.selfTrainerId,
+        clientId: widget.client.id,
+        text: textMsgController.value.text,
+        date: DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000,
+        isSendClient: widget.user.role == User.CLIENT_ROLE,
+      ),
+    ));
   }
 }

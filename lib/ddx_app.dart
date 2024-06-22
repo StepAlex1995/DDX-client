@@ -1,6 +1,4 @@
-import 'package:ddx_trainer/features/main/main_page.dart';
 import 'package:ddx_trainer/theme/theme.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'router/app_router.dart';

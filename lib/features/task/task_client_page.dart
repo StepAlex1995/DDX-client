@@ -17,7 +17,6 @@ import '../../text/text.dart';
 import '../../theme/theme.dart';
 import '../exercise_list/widgets/exercise_tile.dart';
 import '../widgets/rounded_button.dart';
-import '../widgets/text_input.dart';
 import 'bloc/task_bloc.dart';
 
 class TaskClientPage extends StatefulWidget {
@@ -56,6 +55,7 @@ class _TaskClientPageState extends State<TaskClientPage> {
     timeMaxController.dispose();
     setController.dispose();
     repeatController.dispose();
+    super.dispose();
   }
 
   @override

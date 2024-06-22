@@ -1,4 +1,3 @@
-import 'package:ddx_trainer/theme/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,7 +53,6 @@ class TextInput extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Icon(
                   icon,
-                  //Icons.person,
                   color: Colors.white,
                   size: 30,
                 ),
@@ -63,23 +61,7 @@ class TextInput extends StatelessWidget {
             return const SizedBox(width: 10,);
           }
         ),
-        decoration: BoxDecoration(
-            //border: Border.all(color: Colors.red)
-            ),
-        /* decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            border: InputBorder.none,
-            prefixIcon: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: Icon(
-                icon,
-                //Icons.person,
-                color: Colors.white,
-                size: 30,
-              ),
-            ),
-            hintText: hint,
-            hintStyle: theme.textTheme.labelSmall),*/
+        decoration: const BoxDecoration(),
         style: theme.textTheme.bodyMedium,
         keyboardType: inputType,
         textInputAction: inputAction,

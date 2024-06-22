@@ -1,5 +1,4 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/msg/abstract_msg_repository.dart';
 import '../../../repository/msg/model/discussion_client_response.dart';
@@ -19,7 +18,6 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
         emit(DiscussionLoadingState());
         final loadDiscussionClientResponse =
             await msgRepository.loadDiscussionClient(event.user);
-        //print('loadMsgListResponse = ' + loadMsgListResponse.code.toString());
         if (loadDiscussionClientResponse.code != 200) {
           if (loadDiscussionClientResponse.code == 401) {
             emit(DiscussionFailureState(
@@ -48,7 +46,6 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
         emit(DiscussionLoadingState());
         final loadDiscussionTrainerResponse =
         await msgRepository.loadDiscussionTrainer(event.user);
-        //print('loadMsgListResponse = ' + loadMsgListResponse.code.toString());
         if (loadDiscussionTrainerResponse.code != 200) {
           if (loadDiscussionTrainerResponse.code == 401) {
             emit(DiscussionFailureState(

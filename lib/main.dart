@@ -9,7 +9,6 @@ void main() {
   dio.options.sendTimeout = const Duration(seconds: 10);
   dio.options.connectTimeout = const Duration(seconds: 10);
   dio.options.receiveTimeout = const Duration(seconds: 10);
-  //dio.options.baseUrl = Config.server;
 
   Di.initDi(dio);
 

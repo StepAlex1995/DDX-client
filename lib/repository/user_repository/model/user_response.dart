@@ -114,8 +114,13 @@ class User extends BaseModel {
     return 'User{login: $login, role: $role, clientId: $clientId, selfTrainerId: $selfTrainerId, name: $name, isMan: $isMan, phone: $phone, birthDate: $birthDate, trainerId: $trainerId, photoUrl: $photoUrl, token: $token, isFullProfile: $isFullProfile}';
   }
 
-  Client convertToClient(){
+  Client convertToClient() {
     DateFormat format = DateFormat("yyy-MM-ddTHH:mm:ss");
-    return Client(id: clientId, name: name, isMan: isMan, phone: phone, birthDate: format.parse(birthDate));
+    return Client(
+        id: clientId,
+        name: name,
+        isMan: isMan,
+        phone: phone,
+        birthDate: format.parse(birthDate));
   }
 }

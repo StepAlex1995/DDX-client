@@ -25,14 +25,10 @@ class LoadPhotoExercise extends StatefulWidget {
       {super.key, required this.user, required this.exerciseId});
 
   @override
-  State<LoadPhotoExercise> createState() =>
-      _LoadPhotoExerciseState(user: user, exerciseId: exerciseId);
+  State<LoadPhotoExercise> createState() => _LoadPhotoExerciseState();
 }
 
 class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
-  final User user;
-  final int exerciseId;
-
   bool loadSuccess = false;
   int photoNumber = 0;
 
@@ -42,22 +38,12 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
   final _loadPhotoExerciseBloc =
       LoadPhotoExerciseBloc(GetIt.I<AbstractExerciseRepository>());
 
-  _LoadPhotoExerciseState({required this.user, required this.exerciseId});
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return CupertinoPageScaffold(
-        /*navigationBar: CupertinoNavigationBar(
-          backgroundColor: AppColor.darkBackgroundColor,
-          middle: Text(
-            AppTxt.titleExercise,
-            style: theme.textTheme.bodyMedium!
-                .copyWith(color: AppColor.hintTextColor),
-          ),
-        ),*/
-        child: Material(
-            child: Container(
+      child: Material(
+        child: Container(
           padding:
               const EdgeInsets.only(left: 10.0, right: 10, top: 36, bottom: 36),
           alignment: Alignment.center,
@@ -70,7 +56,8 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
                 AppTxt.titlePhotoExecute,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.titleLarge,
-              ),const SizedBox(
+              ),
+              const SizedBox(
                 height: 30,
               ),
               Container(
@@ -109,7 +96,6 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
                   },
                 ),
               ),
-
               Text(
                 "${AppTxt.uploadedFilesCount}\t$photoNumber",
                 style: theme.textTheme.bodyMedium?.copyWith(fontSize: 30),
@@ -155,7 +141,6 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
                               textStyle: theme.textTheme.labelMedium,
                               onPressed: () {
                                 uploadPhoto();
-                                //goToExerciseList();
                               },
                             ),
                           ],
@@ -177,7 +162,7 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
                               ),
                             );
                           } else if (loadSuccess == true) {
-                            return Text(AppTxt.fileUploadSuccess);
+                            return const Text(AppTxt.fileUploadSuccess);
                           } else {
                             return Container();
                           }
@@ -185,11 +170,11 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
                       }
                     }),
               ),
-
               Builder(builder: (context) {
                 if (loadSuccess == true) {
                   return Padding(
-                    padding: const EdgeInsets.only(left: 10.0,right: 10,top: 30),
+                    padding:
+                        const EdgeInsets.only(left: 10.0, right: 10, top: 30),
                     child: RoundedButton(
                       bgrColor: AppColor.primaryColor,
                       text: AppTxt.btnComplete,
@@ -205,7 +190,9 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
               })
             ],
           ),
-        )));
+        ),
+      ),
+    );
   }
 
   checkPermissionGallery() async {
@@ -231,28 +218,24 @@ class _LoadPhotoExerciseState extends State<LoadPhotoExercise> {
 
   uploadPhoto() {
     _loadPhotoExerciseBloc.add(LoadPhotoExerciseUploadInitEvent(
-        user: user,
+        user: widget.user,
         requestData: LoadPhotoExerciseRequest(
-            exerciseId: exerciseId, number: photoNumber, file: file!)));
+            exerciseId: widget.exerciseId, number: photoNumber, file: file!)));
   }
 
   goToExerciseList() {
-    AppRouter.goToPage(context, HomeTrainerPage(user: user, indexTab: 1), true);
+    AppRouter.goToPage(
+        context, HomeTrainerPage(user: widget.user, indexTab: 1), true);
   }
 
   getCamera() async {
     var img = await image.pickImage(source: ImageSource.camera);
     setState(() {
       file = img;
-      //file = File(img!.path);
     });
   }
 
   getGallery() async {
-    /* var img = await image.pickImage(source: ImageSource.gallery);
-    setState(() {
-      file = File(img!.path);
-    });*/
     var img = await image.pickImage(source: ImageSource.gallery);
     setState(() {
       file = img;

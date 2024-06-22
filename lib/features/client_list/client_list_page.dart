@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:ddx_trainer/features/client_list/bloc/client_list_bloc.dart';
-import 'package:ddx_trainer/features/client_list/wisgets/client_tile.dart';
+import 'package:ddx_trainer/features/client_list/widgets/client_tile.dart';
 import 'package:ddx_trainer/repository/client/abstract_client_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,14 +19,11 @@ class ClientListPage extends StatefulWidget {
   const ClientListPage({super.key, required this.user});
 
   @override
-  State<ClientListPage> createState() => _ClientListPageState(user: user);
+  State<ClientListPage> createState() => _ClientListPageState();
 }
 
 class _ClientListPageState extends State<ClientListPage> {
-  final User user;
   final _clientListBloc = ClientListBloc(GetIt.I<AbstractClientRepository>());
-
-  _ClientListPageState({required this.user});
 
   @override
   void initState() {
@@ -53,7 +50,7 @@ class _ClientListPageState extends State<ClientListPage> {
               onRefresh: () async {
                 final completer = Completer();
                 _clientListBloc
-                    .add(LoadClientListEvent(completer: completer, user: user));
+                    .add(LoadClientListEvent(completer: completer, user: widget.user));
                 return completer.future;
               },
               child: BlocBuilder<ClientListBloc, ClientListState>(
@@ -64,7 +61,7 @@ class _ClientListPageState extends State<ClientListPage> {
                       child: ListView.separated(
                           itemBuilder: (context, i) {
                             return ClientTile(
-                                user: user, client: state.exerciseList[i]);
+                                user: widget.user, client: state.exerciseList[i]);
                           },
                           separatorBuilder: (context, index) {
                             return Divider(
@@ -94,7 +91,6 @@ class _ClientListPageState extends State<ClientListPage> {
                   } else {
                     return Container();
                   }
-                  ///////////////
                 },
               ),
             ),
@@ -105,6 +101,6 @@ class _ClientListPageState extends State<ClientListPage> {
   }
 
   loadClientList() {
-    _clientListBloc.add(LoadClientListEvent(user: user));
+    _clientListBloc.add(LoadClientListEvent(user: widget.user));
   }
 }
