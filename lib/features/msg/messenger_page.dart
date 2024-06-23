@@ -16,7 +16,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:record/record.dart';
 
+import '../../config.dart';
 import '../../repository/user_repository/model/user_response.dart';
 import '../../text/text.dart';
 import '../../utils/date_util.dart';
@@ -39,7 +43,8 @@ class MessengerPage extends StatefulWidget {
   State<MessengerPage> createState() => _MessengerPageState();
 }
 
-class _MessengerPageState extends State<MessengerPage> {
+class _MessengerPageState extends State<MessengerPage>
+    with TickerProviderStateMixin {
   late ScrollController _scrollController;
   List<String> items = [];
 
@@ -48,6 +53,18 @@ class _MessengerPageState extends State<MessengerPage> {
 
   final TextEditingController textMsgController = TextEditingController();
   Timer? timer;
+  bool isStartRecording = false;
+
+  late Record audioRecord;
+  final player = AudioPlayer();
+
+  //late AudioPlayer audioPlayer;
+  //late AudioPlayer audioPlayer;
+  String audioPath = '';
+  bool isReadyToSending = false;
+  late AnimationController animController;
+  late Animation<double> animation;
+  String currentVoice = "";
 
   @override
   void initState() {
@@ -59,6 +76,19 @@ class _MessengerPageState extends State<MessengerPage> {
         const Duration(seconds: 5),
         (Timer t) => _msgListBloc
             .add(LoadMsgListEvent(user: widget.user, taskId: widget.task.id)));
+    audioRecord = Record();
+    animController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    animation =
+        CurvedAnimation(parent: animController, curve: Curves.easeInOut);
+    animController.repeat(reverse: true);
+    player.playerStateStream.listen((playerState) {
+      if (playerState.processingState == ProcessingState.completed) {
+        setState(() {
+          currentVoice = "";
+        });
+      }
+    });
   }
 
   @override
@@ -66,6 +96,8 @@ class _MessengerPageState extends State<MessengerPage> {
     _scrollController.dispose();
     textMsgController.dispose();
     timer?.cancel();
+    audioRecord.dispose();
+    player.dispose();
     super.dispose();
   }
 
@@ -180,6 +212,7 @@ class _MessengerPageState extends State<MessengerPage> {
   }
 
   chatTile(bool isYou, String message, String time) {
+    Tween<double> tween = Tween(begin: 0.8, end: 1);
     return Row(
       mainAxisAlignment:
           isYou ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -192,24 +225,52 @@ class _MessengerPageState extends State<MessengerPage> {
               )
             : const SizedBox(),
         Flexible(
-          child: Container(
-            margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: isYou ? AppColor.semiWhite : AppColor.secondaryAccentColor,
-              borderRadius: isYou
-                  ? const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                      bottomLeft: Radius.circular(30),
-                    )
-                  : const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
-                    ),
+          child: GestureDetector(
+            onTap: () => playRecord(message),
+            child: Container(
+              margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: message == currentVoice
+                    ? AppColor.primaryColor
+                    : isYou
+                        ? AppColor.semiWhite
+                        : AppColor.secondaryAccentColor,
+                borderRadius: isYou
+                    ? const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                        bottomLeft: Radius.circular(30),
+                      )
+                    : const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
+              ),
+              child: Builder(builder: (context) {
+                if (isVoiceMsg(message)) {
+                  return Builder(builder: (context) {
+                    if (currentVoice == message) {
+                      return ScaleTransition(
+                        scale: tween.animate(animation),
+                        child: const Icon(
+                          Icons.record_voice_over_sharp,
+                          color: Colors.white,
+                        ),
+                      );
+                    } else {
+                      return const Icon(
+                        Icons.record_voice_over_sharp,
+                        color: Colors.white,
+                      );
+                    }
+                  });
+                } else {
+                  return Text(message);
+                }
+              }),
             ),
-            child: Text(message),
           ),
         ),
         !isYou
@@ -222,7 +283,9 @@ class _MessengerPageState extends State<MessengerPage> {
     );
   }
 
-  bool isReadyToSending = false;
+  isVoiceMsg(String msg) {
+    return msg.contains("image/") && msg.contains(".m4a");
+  }
 
   Widget formChat() {
     return Positioned(
@@ -231,100 +294,170 @@ class _MessengerPageState extends State<MessengerPage> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
           color: AppColor.darkBackgroundColor,
-          child: TextField(
-            maxLines: 1,
-            onChanged: (text) {
-              if (text.isEmpty && isReadyToSending ||
-                  text.isNotEmpty && !isReadyToSending) {
-                setState(() {
-                  isReadyToSending = !isReadyToSending;
-                });
-              }
-            },
-            controller: textMsgController,
-            style: Theme.of(context).textTheme.bodyMedium,
-            decoration: InputDecoration(
-              hintText: AppTxt.enterYourMsg,
-              suffixIcon: BlocListener<MsgBloc, MsgState>(
-                bloc: _msgBloc,
-                listener: (context, state) {
-                  if (state is MsgSendState) {
-                    textMsgController.clear();
-                    setState(() {
-                      isReadyToSending = false;
-                    });
-                    _msgListBloc.add(LoadMsgListEvent(
-                        user: widget.user, taskId: widget.task.id));
-                  }
-                },
-                child: BlocBuilder<MsgBloc, MsgState>(
-                  bloc: _msgBloc,
-                  builder: (context, state) {
-                    if (state is MsgSendingState) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: AppColor.darkBackgroundColor),
-                          padding: const EdgeInsets.all(14),
-                          child: const SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(
-                              color: AppColor.primaryColor,
-                            ),
-                          ),
-                        ),
-                      );
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  maxLines: 1,
+                  onChanged: (text) {
+                    if (text.isEmpty && isReadyToSending ||
+                        text.isNotEmpty && !isReadyToSending) {
+                      setState(() {
+                        isReadyToSending = !isReadyToSending;
+                      });
                     }
-                    return GestureDetector(
-                      onTap: () {
-                        if (isReadyToSending) {
-                          sendMessage();
+                  },
+                  controller: textMsgController,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  decoration: InputDecoration(
+                    hintText: AppTxt.enterYourMsg,
+                    suffixIcon: BlocListener<MsgBloc, MsgState>(
+                      bloc: _msgBloc,
+                      listener: (context, state) {
+                        if (state is MsgSendState) {
+                          textMsgController.clear();
+                          setState(() {
+                            isReadyToSending = false;
+                          });
+                          _msgListBloc.add(LoadMsgListEvent(
+                              user: widget.user, taskId: widget.task.id));
                         }
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: AppColor.darkBackgroundColor),
-                          padding: const EdgeInsets.all(14),
-                          child: Icon(
-                            Icons.send_rounded,
-                            color: isReadyToSending
-                                ? AppColor.primaryColor
-                                : AppColor.appGrey,
-                            size: 24,
-                          ),
-                        ),
+                      child: BlocBuilder<MsgBloc, MsgState>(
+                        bloc: _msgBloc,
+                        builder: (context, state) {
+                          if (state is MsgSendingState) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: AppColor.darkBackgroundColor),
+                                padding: const EdgeInsets.all(14),
+                                child: const SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: CircularProgressIndicator(
+                                    color: AppColor.primaryColor,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return GestureDetector(
+                            onTap: () {
+                              if (isReadyToSending) {
+                                sendMessage(false);
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: AppColor.darkBackgroundColor),
+                                padding: const EdgeInsets.all(14),
+                                child: Icon(
+                                  isStartRecording
+                                      ? Icons.mic
+                                      : Icons.send_rounded,
+                                  color: isStartRecording
+                                      ? AppColor.secondaryAccentColor
+                                      : isReadyToSending
+                                          ? AppColor.primaryColor
+                                          : AppColor.appGrey,
+                                  size: 24,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
+                    ),
+                    filled: true,
+                    fillColor: AppColor.appGrey,
+                    labelStyle: const TextStyle(fontSize: 12),
+                    contentPadding: const EdgeInsets.all(20),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: AppColor.appGrey),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: const BorderSide(color: AppColor.appGrey),
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
                 ),
               ),
-              filled: true,
-              fillColor: AppColor.appGrey,
-              labelStyle: const TextStyle(fontSize: 12),
-              contentPadding: const EdgeInsets.all(20),
-              enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: AppColor.appGrey),
-                borderRadius: BorderRadius.circular(25),
+              Listener(
+                behavior: HitTestBehavior.translucent,
+                onPointerDown: (_) => startRecord(),
+                onPointerUp: (_) => stopRecord(),
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      color: AppColor.darkBackgroundColor),
+                  padding: const EdgeInsets.only(left: 16),
+                  child: Icon(
+                    isStartRecording ? Icons.touch_app : Icons.mic,
+                    color: isStartRecording
+                        ? AppColor.secondaryAccentColor
+                        : AppColor.primaryColor,
+                    size: 30,
+                  ),
+                ),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: AppColor.appGrey),
-                borderRadius: BorderRadius.circular(25),
-              ),
-            ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  sendMessage() {
-    if (textMsgController.value.text.isEmpty) {
+  stopRecord() async {
+    try {
+      String? path = await audioRecord.stop();
+      setState(() {
+        isStartRecording = false;
+        audioPath = path ?? '';
+      });
+      sendMessage(true);
+    } catch (e) {}
+  }
+
+  startRecord() async {
+    try {
+      if (await audioRecord.hasPermission()) {
+        await audioRecord.start();
+        setState(() {
+          isStartRecording = true;
+        });
+      }
+    } catch (e) {}
+  }
+
+  playRecord(String message) async {
+    try {
+      player.playerStateStream.listen((state) {});
+      if (player.playerState.playing) {
+        player.stop();
+        setState(() {
+          currentVoice = "";
+        });
+        return;
+      }
+      setState(() {
+        currentVoice = message;
+      });
+      await player.setUrl(
+          "${Config.server}/api/file/download/${message.replaceFirst("image/", "")}",
+          headers: {'Authorization': 'bearer ${widget.user.token}'});
+      player.play();
+    } catch (e) {}
+  }
+
+  sendMessage(bool isVoice) {
+    if (textMsgController.value.text.isEmpty && !isVoice) {
       return;
     }
     _msgBloc.add(SendMsgEvent(
@@ -339,6 +472,7 @@ class _MessengerPageState extends State<MessengerPage> {
         date: DateTime.now().toUtc().millisecondsSinceEpoch ~/ 1000,
         isSendClient: widget.user.role == User.CLIENT_ROLE,
       ),
+      file: isVoice ? XFile(audioPath) : null,
     ));
   }
 }

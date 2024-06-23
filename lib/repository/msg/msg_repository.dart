@@ -3,6 +3,7 @@ import 'package:ddx_trainer/repository/msg/abstract_msg_repository.dart';
 import 'package:ddx_trainer/repository/msg/model/discussion_client_response.dart';
 import 'package:ddx_trainer/repository/msg/model/msg_list_response.dart';
 import 'package:ddx_trainer/repository/msg/model/send_msg_request.dart';
+import 'package:ddx_trainer/repository/msg/model/send_msg_voice_request.dart';
 import 'package:ddx_trainer/repository/user_repository/model/app_response_model.dart';
 import 'package:ddx_trainer/repository/user_repository/model/user_response.dart';
 import 'package:dio/dio.dart';
@@ -89,7 +90,8 @@ class MsgRepository extends AbstractMsgRepository {
   }
 
   @override
-  Future<AppResponseModel<DiscussionResponse>> loadDiscussionTrainer(User user) async {
+  Future<AppResponseModel<DiscussionResponse>> loadDiscussionTrainer(
+      User user) async {
     final response = await dio.get(
       '${Config.server}/api/msg/discussion/trainer/${user.selfTrainerId}',
       options: Options(
@@ -113,6 +115,34 @@ class MsgRepository extends AbstractMsgRepository {
       );
     } else {
       return AppResponseModel(code: response.statusCode ?? 500);
+    }
+  }
+
+  @override
+  Future<AppResponseModel<SimpleResponse>> sendMsgVoice(
+      User user, SendMsgVoiceRequest msgVoice) async {
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(msgVoice.file.path,
+          filename: msgVoice.file.name),
+      'task_id': msgVoice.taskId,
+      'trainer_id': msgVoice.trainerId,
+      'client_id': msgVoice.clientId,
+      'date': msgVoice.date,
+      'is_send_client': msgVoice.isSendClient,
+    });
+    Response response = await dio.post('${Config.server}/api/msg/voice',
+        data: formData,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 600;
+          },
+          headers: getHeaderWithTokenForFileLoader(user.token),
+        ));
+    if (response.statusCode == 200) {
+      return AppResponseModel(code: 200);
+    } else {
+      return AppResponseModel(code: 500);
     }
   }
 }

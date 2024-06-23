@@ -38,14 +38,6 @@ class _ExerciseListPageState extends State<ExerciseListPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return CupertinoPageScaffold(
-      /*  navigationBar: CupertinoNavigationBar(
-          backgroundColor: AppColor.darkBackgroundColor,
-          middle: Text(
-            AppTxt.tabExercises,
-            style: theme.textTheme.bodyMedium!
-                .copyWith(color: AppColor.hintTextColor),
-          ),
-        ),*/
         child: Stack(children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -25,6 +25,8 @@ dependencies:
   numberpicker: ^2.1.2
   file_picker: ^8.0.5
   video_player: ^2.8.7
+  record: ^4.4.4
+  just_audio: ^0.9.38
 
 
 dev_dependencies:
