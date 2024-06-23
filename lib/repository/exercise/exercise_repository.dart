@@ -2,6 +2,8 @@ import 'package:ddx_trainer/repository/exercise/abstract_exercise_repository.dar
 import 'package:ddx_trainer/repository/exercise/model/add_exercise_request.dart';
 import 'package:ddx_trainer/repository/exercise/model/add_exercise_response.dart';
 import 'package:ddx_trainer/repository/exercise/model/exercise_list_response.dart';
+import 'package:ddx_trainer/repository/exercise/model/load_feedback_file_request.dart';
+import 'package:ddx_trainer/repository/exercise/model/load_feedback_file_response.dart';
 import 'package:ddx_trainer/repository/exercise/model/load_photo_exercise_request.dart';
 import 'package:ddx_trainer/repository/model/simple_response.dart';
 import 'package:ddx_trainer/repository/user_repository/model/app_response_model.dart';
@@ -110,6 +112,33 @@ class ExerciseRepository extends AbstractExerciseRepository {
     if (response.statusCode == 200) {
       AddExerciseResponse data = AddExerciseResponse.fromJson(response.data);
       return AppResponseModel(code: response.statusCode ?? 200, data: data);
+    } else {
+      return AppResponseModel(code: 500);
+    }
+  }
+
+  @override
+  Future<AppResponseModel<LoadFeedbackFileResponse>> uploadFeedbackFileExercise(
+      User user, LoadFeedbackFileRequest feedback) async {
+    FormData formData = FormData.fromMap({
+      'file': await MultipartFile.fromFile(feedback.file.path,
+          filename: feedback.file.name),
+      'task_id': feedback.taskId,
+    });
+
+    Response response = await dio.post('${Config.server}/api/file/task',
+        data: formData,
+        options: Options(
+          followRedirects: false,
+          validateStatus: (status) {
+            return status! < 600;
+          },
+          headers: getHeaderWithTokenForFileLoader(user.token),
+        ));
+    if (response.statusCode == 200 && response.data != null) {
+      LoadFeedbackFileResponse data =
+          LoadFeedbackFileResponse.fromJson(response.data);
+      return AppResponseModel(code: 200, data: data);
     } else {
       return AppResponseModel(code: 500);
     }

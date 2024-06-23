@@ -20,18 +20,10 @@ class HomeClientPage extends StatefulWidget {
 }
 
 class _HomeClientPageState extends State<HomeClientPage> {
-  /*void _onTap(int value) {
-    print('Value => $value');
-    if (value == 2) {
-      myHomeState.initState();
-    }
-    indexPrevValue = value;
-  }*/
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return CupertinoTabScaffold(
         tabBar: CupertinoTabBar(
             backgroundColor: theme.cardColor,

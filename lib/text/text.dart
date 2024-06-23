@@ -43,6 +43,7 @@ class AppTxt {
   static const titleTask = 'Задание';
   static const titleTasksExecute = 'Упражнение';
   static const titlePhotoExecute = 'Примеры';
+  static const titleLoadFeedbackFile = 'Фотоотчет';
 
   static const lvlEasy = 'Начинающий';
   static const lvlMedium = 'Средний';
@@ -81,6 +82,7 @@ class AppTxt {
   static const target = 'Цель';
   static const sec = ' cек.';
   static const count = ' раз ';
+  static const count1 = ' раза ';
   static const difficultyClientCompleteForClient = 'Вы оценили сложность выполнения упражнения на:\t';
   static const difficultyClientCompleteForTrainer = 'Клиент оценил сложность упражнения на:\t';
   static const gradeTrainerCompleteForTrainer = 'Вы оценили выполнение упражнения на:\t';
@@ -88,6 +90,9 @@ class AppTxt {
   static const gradeTrainer = 'Оценить выполнение на:\t';
   static const difficultyClient = 'Оценить сложность на:\t';
   static const goToMsg = 'Перейти к обсуждению';
+  static const loadFeedbackFileClient = 'Загрузить фотоотчет';
+  static const showFeedbackFileClient = 'Посмотреть фотоотчет';
+  static const showFeedbackFileTrainer = 'Фотоотчет клиента';
   static const tryAgain = 'Повторить';
   static const yourResults = 'Ваши результаты:';
   static const sendResultClient = 'Отправить результаты';

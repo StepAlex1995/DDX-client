@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ddx_trainer/features/exercise/exercise_page.dart';
 import 'package:ddx_trainer/features/msg/bloc/msg_bloc.dart';
 import 'package:ddx_trainer/features/msg/bloc/msg_list_bloc.dart';
 import 'package:ddx_trainer/features/task/task_client_page.dart';
@@ -25,12 +26,14 @@ class MessengerPage extends StatefulWidget {
   final User user;
   final Client client;
   final TaskModel task;
+  final bool showTask;
 
   const MessengerPage(
       {super.key,
       required this.user,
       required this.client,
-      required this.task});
+      required this.task,
+      required this.showTask});
 
   @override
   State<MessengerPage> createState() => _MessengerPageState();
@@ -91,10 +94,14 @@ class _MessengerPageState extends State<MessengerPage> {
         child: ExerciseTile(
           exercise: widget.task.exercise,
           user: widget.user,
-          getExercise: goToTask,
+          getExercise: widget.showTask ? goToTask : goToExercise,
         ),
       ),
     );
+  }
+
+  goToExercise(Exercise e) {
+    AppRouter.goToPage(context, ExercisePage(user: widget.user, exercise: e));
   }
 
   goToTask(Exercise e) {

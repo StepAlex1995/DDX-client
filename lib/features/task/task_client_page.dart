@@ -1,7 +1,10 @@
+import 'package:ddx_trainer/features/feedback_file/feedback_file_page.dart';
+import 'package:ddx_trainer/features/feedback_file/load_feedback_file_page.dart';
 import 'package:ddx_trainer/features/msg/messenger_page.dart';
 import 'package:ddx_trainer/features/task/widgets/task_param_client_widget.dart';
 import 'package:ddx_trainer/repository/task/model/feedback_param.dart';
 import 'package:ddx_trainer/repository/task/model/update_task_request.dart';
+import 'package:ddx_trainer/repository/user_repository/model/base_model.dart';
 import 'package:ddx_trainer/router/app_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -189,7 +192,9 @@ class _TaskClientPageState extends State<TaskClientPage> {
               return BlocListener<TaskBloc, TaskState>(
                 bloc: _taskListBloc,
                 listener: (context, state) {
-                  resetParams();
+                  if (state is TaskFeedbackParamsSend) {
+                    resetParams();
+                  }
                 },
                 child: BlocBuilder<TaskBloc, TaskState>(
                   bloc: _taskListBloc,
@@ -276,6 +281,7 @@ class _TaskClientPageState extends State<TaskClientPage> {
                   if (state is TaskFeedbackTrainerSend) {
                     setState(() {
                       widget.task.feedbackClient = _difficulty;
+                      widget.task.state = 2;
                     });
                   }
                 },
@@ -291,7 +297,7 @@ class _TaskClientPageState extends State<TaskClientPage> {
                               color: AppColor.primaryColor,
                             ),
                           ),
-                          SizedBox(height: 16),
+                          SizedBox(height: 52),
                         ],
                       );
                     } else if (state is TaskFeedbackTrainerFailure) {
@@ -315,6 +321,7 @@ class _TaskClientPageState extends State<TaskClientPage> {
                               },
                             ),
                           ),
+                          const SizedBox(height: 36),
                         ],
                       );
                     }
@@ -329,7 +336,8 @@ class _TaskClientPageState extends State<TaskClientPage> {
                               setState(() => _difficulty = value),
                         ),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 36.0),
+                          padding: const EdgeInsets.only(
+                              left: 36.0, right: 36, bottom: 36),
                           child: RoundedButton(
                             bgrColor: AppColor.secondaryAccentColor,
                             text: AppTxt.difficultyClient +
@@ -357,8 +365,10 @@ class _TaskClientPageState extends State<TaskClientPage> {
                     AppTxt.gradeTrainerCompleteForClient +
                         widget.task.feedbackTrainer.toString(),
                     textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium!
-                        .copyWith(color: getColorByGradeTrainer(widget.task.feedbackTrainer),fontSize: 20),
+                    style: theme.textTheme.bodyMedium!.copyWith(
+                        color:
+                            getColorByGradeTrainer(widget.task.feedbackTrainer),
+                        fontSize: 20),
                   ),
                   const SizedBox(height: 24),
                 ],
@@ -366,6 +376,28 @@ class _TaskClientPageState extends State<TaskClientPage> {
             } else {
               return Container();
             }
+          }),
+          Builder(builder: (context) {
+            var textBtn = (widget.task.fileFeedbackUrl.isNotEmpty &&
+                    widget.task.fileFeedbackUrl != BaseModel.NO_DATA_STR)
+                ? AppTxt.showFeedbackFileClient
+                : AppTxt.loadFeedbackFileClient;
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 36.0),
+              child: RoundedButton(
+                bgrColor: AppColor.secondaryAccentColor,
+                text: textBtn,
+                textStyle: theme.textTheme.labelMedium,
+                onPressed: () {
+                  if (widget.task.fileFeedbackUrl.isNotEmpty &&
+                      widget.task.fileFeedbackUrl != BaseModel.NO_DATA_STR) {
+                    goToFeedbackFilePage();
+                  } else {
+                    goToLoadFeedbackFile();
+                  }
+                },
+              ),
+            );
           }),
 
           ///
@@ -385,6 +417,24 @@ class _TaskClientPageState extends State<TaskClientPage> {
     );
   }
 
+  goToFeedbackFilePage() {
+    AppRouter.goToPage(
+        context,
+        FeedbackFilePage(
+          user: widget.user,
+          fileUrl: widget.task.fileFeedbackUrl,
+        ));
+  }
+
+  goToLoadFeedbackFile() {
+    AppRouter.goToPage(
+        context,
+        LoadFeedbackFilePage(
+          user: widget.user,
+          task: widget.task,
+        ));
+  }
+
   goToMessenger() {
     AppRouter.goToPage(
         context,
@@ -392,6 +442,7 @@ class _TaskClientPageState extends State<TaskClientPage> {
           user: widget.user,
           client: widget.client,
           task: widget.task,
+          showTask: false,
         ));
   }
 
@@ -436,6 +487,7 @@ class _TaskClientPageState extends State<TaskClientPage> {
 
   sendResultsClient() {
     List<FeedbackParam> params = [];
+    var countParams = widget.task.params?.length ?? 0;
     if (widget.task.params != null) {
       for (var p in widget.task.params!) {
         switch (p.paramName) {
@@ -463,11 +515,13 @@ class _TaskClientPageState extends State<TaskClientPage> {
                   id: p.id, value: int.parse(timeMaxController.value.text)));
             }
             break;
+          default:
+            countParams -= 1;
         }
       }
     }
     var updateTask = UpdateTaskRequest(
-        feedbackClient: -1,
+        feedbackClient: widget.task.feedbackClient,
         feedbackTrainer: widget.task.feedbackTrainer,
         state: 2,
         fileFeedbackUrl: widget.task.fileFeedbackUrl,
@@ -476,7 +530,8 @@ class _TaskClientPageState extends State<TaskClientPage> {
     _taskListBloc.add(SendFeedbackWithParamsTask(
         user: widget.user,
         updateTaskRequest: updateTask,
-        taskId: widget.task.id));
+        taskId: widget.task.id,
+        isAllParamsSelected: countParams == params.length));
   }
 
   MaterialColor getColorByGradeClient(int grade) {
@@ -500,8 +555,9 @@ class _TaskClientPageState extends State<TaskClientPage> {
   }
 
   resetParams() {
+    widget.task.state = 2;
     setState(() {
-      widget.task.feedbackClient = -1;
+      //widget.task.feedbackClient = -1;
       for (var p in widget.task.params!) {
         switch (p.paramName) {
           case TaskModel.PARAM_SET_COUNT:

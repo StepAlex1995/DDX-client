@@ -10,10 +10,12 @@ import 'package:get_it/get_it.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 import '../../repository/task/abstract_task_repository.dart';
+import '../../repository/user_repository/model/base_model.dart';
 import '../../repository/user_repository/model/user_response.dart';
 import '../../router/app_router.dart';
 import '../../text/text.dart';
 import '../exercise_list/widgets/exercise_tile.dart';
+import '../feedback_file/feedback_file_page.dart';
 import '../msg/messenger_page.dart';
 import '../widgets/rounded_button.dart';
 import 'bloc/task_bloc.dart';
@@ -251,6 +253,24 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
           }
         }),
 
+        Builder(builder: (context) {
+          if (widget.task.fileFeedbackUrl.isNotEmpty &&
+              widget.task.fileFeedbackUrl != BaseModel.NO_DATA_STR) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 36.0),
+              child: RoundedButton(
+                bgrColor: AppColor.secondaryAccentColor,
+                text: AppTxt.showFeedbackFileTrainer,
+                textStyle: theme.textTheme.labelMedium,
+                onPressed: () {
+                  goToFeedbackFilePage();
+                },
+              ),
+            );
+          }
+          return Container();
+        }),
+
         ///
         Padding(
           padding: const EdgeInsets.all(36.0),
@@ -265,6 +285,15 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
         ),
       ],
     ));
+  }
+
+  goToFeedbackFilePage() {
+    AppRouter.goToPage(
+        context,
+        FeedbackFilePage(
+          user: widget.user,
+          fileUrl: widget.task.fileFeedbackUrl,
+        ));
   }
 
   MaterialColor getColorByGradeClient(int grade) {
@@ -294,6 +323,7 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
           user: widget.user,
           client: widget.client,
           task: widget.task,
+          showTask: false,
         ));
   }
 

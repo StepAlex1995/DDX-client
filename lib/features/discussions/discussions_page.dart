@@ -21,16 +21,17 @@ class DiscussionsPage extends StatefulWidget {
   State<DiscussionsPage> createState() => _DiscussionsPageState();
 }
 
-class _DiscussionsPageState extends State<DiscussionsPage> with AutomaticKeepAliveClientMixin {
+class _DiscussionsPageState extends State<DiscussionsPage>
+    with AutomaticKeepAliveClientMixin {
   final _discussionBloc = DiscussionBloc(GetIt.I<AbstractMsgRepository>());
 
   @override
   void initState() {
     super.initState();
-    updateDiscussionList();
+    //updateDiscussionList();
   }
 
-  updateDiscussionList(){
+  updateDiscussionList() {
     if (widget.user.role == User.CLIENT_ROLE) {
       _discussionBloc.add(LoadDiscussionClientEvent(user: widget.user));
     } else {
@@ -38,9 +39,14 @@ class _DiscussionsPageState extends State<DiscussionsPage> with AutomaticKeepAli
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final isForeground = TickerMode.of(context);
+    if(isForeground) {
+      updateDiscussionList();
+    }
     final theme = Theme.of(context);
     return CupertinoPageScaffold(
       backgroundColor: AppColor.backgroundColor,

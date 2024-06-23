@@ -40,19 +40,24 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
     on<SendFeedbackWithParamsTask>((event, emit) async {
       try {
-        emit(TaskFeedbackParamsSending());
-        final updateTaskResponse = await taskRepository.updateTask(
-            event.user, event.updateTaskRequest, event.taskId);
-        if (updateTaskResponse.code != 200) {
-          if (updateTaskResponse.code == 401) {
-            emit(TaskFeedbackParamsFailure(
-                code: 401, msg: AppTxt.errorTokenFailed));
-          } else {
-            emit(TaskFeedbackParamsFailure(
-                code: 500, msg: AppTxt.errorServerResponse));
-          }
+        if (!event.isAllParamsSelected) {
+          emit(TaskFeedbackParamsFailure(
+              code: 400, msg: AppTxt.errorInputDataIsEmpty));
         } else {
-          emit(TaskFeedbackParamsSend());
+          emit(TaskFeedbackParamsSending());
+          final updateTaskResponse = await taskRepository.updateTask(
+              event.user, event.updateTaskRequest, event.taskId);
+          if (updateTaskResponse.code != 200) {
+            if (updateTaskResponse.code == 401) {
+              emit(TaskFeedbackParamsFailure(
+                  code: 401, msg: AppTxt.errorTokenFailed));
+            } else {
+              emit(TaskFeedbackParamsFailure(
+                  code: 500, msg: AppTxt.errorServerResponse));
+            }
+          } else {
+            emit(TaskFeedbackParamsSend());
+          }
         }
       } catch (e) {
         emit(TaskFeedbackParamsFailure(

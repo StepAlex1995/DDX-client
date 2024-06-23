@@ -36,7 +36,7 @@ class TaskParamResultWidget extends StatelessWidget {
                     style: theme.textTheme.titleSmall,
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(right: 0.0),
+                    padding: const EdgeInsets.only(right: 8.0),
                     child: Text(
                       AppTxt.target,
                       textAlign: TextAlign.center,
@@ -52,14 +52,14 @@ class TaskParamResultWidget extends StatelessWidget {
                 textDirection: TextDirection.ltr,
                 children: [
                   Text(
-                    param.value.toString(),
+                    param.value.toString() + getPostfix(param.value),
                     textAlign: TextAlign.end,
                     style: theme.textTheme.bodyMedium,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 4.0),
                     child: Text(
-                      param.target.toString(),
+                      param.target.toString() + getPostfix(param.target),
                       textAlign: TextAlign.end,
                       style: theme.textTheme.bodyMedium,
                     ),
@@ -72,5 +72,20 @@ class TaskParamResultWidget extends StatelessWidget {
       }
       return Container();
     });
+  }
+
+  String getPostfix(int value) {
+    if (paramName == TaskModel.PARAM_SET_COUNT ||
+        paramName == TaskModel.PARAM_REPEAT_COUNT) {
+      if (value % 10 >= 2 &&
+          value % 10 <= 4 &&
+          (value % 100 < 10 || value % 100 > 20)) {
+        return AppTxt.count1;
+      } else {
+        return AppTxt.count;
+      }
+    } else {
+      return AppTxt.sec;
+    }
   }
 }

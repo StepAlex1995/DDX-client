@@ -20,9 +20,9 @@ class DiscussionTrainerTail extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
-        leading:  Padding(
+        leading: Padding(
           padding: const EdgeInsets.only(left: 2.0),
-          child:   Builder(
+          child: Builder(
             builder: (context) {
               if (discussion.client.isMan) {
                 return const Icon(
@@ -52,14 +52,16 @@ class DiscussionTrainerTail extends StatelessWidget {
           AppRouter.goToPage(
               context,
               MessengerPage(
-                  user: user,
-                  client: Client(id: discussion.client.id,
-                      name: discussion.client.name,
-                      isMan: discussion.client.isMan,
-                      phone: discussion.client.phone,
-                      birthDate: discussion.client.birthDate),
-                  task: discussion.task));
+                user: user,
+                client: Client(
+                    id: discussion.client.id,
+                    name: discussion.client.name,
+                    isMan: discussion.client.isMan,
+                    phone: discussion.client.phone,
+                    birthDate: discussion.client.birthDate),
+                task: discussion.task,
+                showTask: true,
+              ));
         });
   }
 }
-

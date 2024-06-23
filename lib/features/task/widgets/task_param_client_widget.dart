@@ -51,7 +51,7 @@ class TaskParamClientWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 20.0),
                       child: Text(
-                        param.value.toString() + AppTxt.count,
+                        param.value.toString() + getPostfix(param.value),
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium,
                       ),
@@ -59,7 +59,7 @@ class TaskParamClientWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 16.0),
                       child: Text(
-                        param.target.toString() + getPostfix(),
+                        param.target.toString() + getPostfix(param.target),
                         textAlign: TextAlign.right,
                         style: theme.textTheme.bodyMedium,
                       ),
@@ -91,7 +91,7 @@ class TaskParamClientWidget extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
-                    param.target.toString() + getPostfix(),
+                    param.target.toString() + getPostfix(param.target),
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium,
                   ),
@@ -105,11 +105,19 @@ class TaskParamClientWidget extends StatelessWidget {
     });
   }
 
-  String getPostfix() {
-    return paramName == TaskModel.PARAM_SET_COUNT ||
-            paramName == TaskModel.PARAM_REPEAT_COUNT
-        ? AppTxt.count
-        : AppTxt.sec;
+  String getPostfix(int value) {
+    if (paramName == TaskModel.PARAM_SET_COUNT ||
+        paramName == TaskModel.PARAM_REPEAT_COUNT) {
+      if (value % 10 >= 2 &&
+          value % 10 <= 4 &&
+          (value % 100 < 10 || value % 100 > 20)) {
+        return AppTxt.count1;
+      } else {
+        return AppTxt.count;
+      }
+    } else {
+      return AppTxt.sec;
+    }
   }
 
   IconData? getIcon() {

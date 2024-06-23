@@ -59,9 +59,11 @@ class DiscussionClientTile extends StatelessWidget {
           AppRouter.goToPage(
               context,
               MessengerPage(
-                  user: user,
-                  client: user.convertToClient(),
-                  task: discussionClient.task));
+                user: user,
+                client: user.convertToClient(),
+                task: discussionClient.task,
+                showTask: true,
+              ));
         });
   }
 

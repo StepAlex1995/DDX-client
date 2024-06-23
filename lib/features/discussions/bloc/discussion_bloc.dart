@@ -15,7 +15,9 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
   DiscussionBloc(this.msgRepository) : super(DiscussionInitState()) {
     on<LoadDiscussionClientEvent>((event, emit) async {
       try {
-        emit(DiscussionLoadingState());
+        if(state is! DiscussionLoadedState) {
+          emit(DiscussionLoadingState());
+        }
         final loadDiscussionClientResponse =
             await msgRepository.loadDiscussionClient(event.user);
         if (loadDiscussionClientResponse.code != 200) {
@@ -43,7 +45,9 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
 
     on<LoadDiscussionTrainerEvent>((event, emit) async {
       try {
-        emit(DiscussionLoadingState());
+        if(state is! DiscussionLoadedState) {
+          emit(DiscussionLoadingState());
+        }
         final loadDiscussionTrainerResponse =
         await msgRepository.loadDiscussionTrainer(event.user);
         if (loadDiscussionTrainerResponse.code != 200) {
@@ -60,7 +64,7 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
                 code: 200, msg: AppTxt.errorListIsEmpty));
           } else {
             emit(DiscussionLoadedState(
-                discussionList: loadDiscussionTrainerResponse.data!.discussion));
+                discussionList: loadDiscussionTrainerResponse.data!.discussion.reversed.toList()));
           }
         }
       } catch (e) {
