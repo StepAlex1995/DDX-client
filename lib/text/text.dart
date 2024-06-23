@@ -108,11 +108,14 @@ class AppTxt {
 
   static const btnAddFromGallery = 'Выбрать из галереи';
   static const btnAddFromCamera = 'Открыть камеру';
+  static const btnAddVideo = 'Загрузить видео';
   static const titleAddPhoto = 'Добавьте изображения';
   static const btnUploadPhoto = 'Загрузить изображение';
   static const btnComplete = 'Завершить';
   static const btnResetExercise = 'Выбрать другое упражнение';
   static const btnCreateTask = 'Составить занятие';
+  static const waitLoadingVideo = 'Загрузка видео';
+  static const preloadFailed = 'Ошибка загрузки, используейте только файл вормата mp4';
 
   static const fileUploadSuccess = 'Файл загружен';
   static const uploadedFilesCount = 'Загружено файлов:';
