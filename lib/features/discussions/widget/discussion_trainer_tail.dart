@@ -45,7 +45,7 @@ class DiscussionTrainerTail extends StatelessWidget {
           style: theme.textTheme.bodyMedium,
         ),
         subtitle: Text(
-          '[${DateUtil.convertDate(discussion.taskDate, 'dd MMM yyyy')}]\t\t${discussion.task.exercise.title}',
+          '[${DateUtil.convertDate(discussion.task.date, 'dd MMM yyyy')}]\t\t${discussion.task.exercise.title}',
           style: theme.textTheme.labelSmall?.copyWith(fontSize: 14),
         ),
         onTap: () {

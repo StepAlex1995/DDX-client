@@ -106,6 +106,7 @@ class _MessengerPageState extends State<MessengerPage>
     timer?.cancel();
     audioRecord.dispose();
     player.dispose();
+    animController.dispose();
     super.dispose();
   }
 

@@ -66,6 +66,9 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
             emit(DiscussionFailureState(
                 code: 200, msg: AppTxt.errorListIsEmpty));
           } else {
+            loadDiscussionTrainerResponse.data!.discussion.sort((d1, d2) =>
+            d1.taskDate.toUtc().millisecondsSinceEpoch -
+                d2.taskDate.toUtc().millisecondsSinceEpoch);
             emit(DiscussionLoadedState(
                 discussionList: loadDiscussionTrainerResponse
                     .data!.discussion.reversed

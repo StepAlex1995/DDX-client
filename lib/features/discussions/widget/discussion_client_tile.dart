@@ -52,7 +52,7 @@ class DiscussionClientTile extends StatelessWidget {
           style: theme.textTheme.bodyMedium,
         ),
         subtitle: Text(
-          DateUtil.convertDate(discussionClient.taskDate, 'dd MMM yyyy'),
+          DateUtil.convertDate(discussionClient.task.date, 'dd MMM yyyy'),
           style: theme.textTheme.labelSmall?.copyWith(fontSize: 14),
         ),
         onTap: () {
