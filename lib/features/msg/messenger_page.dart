@@ -84,11 +84,19 @@ class _MessengerPageState extends State<MessengerPage>
     animController.repeat(reverse: true);
     player.playerStateStream.listen((playerState) {
       if (playerState.processingState == ProcessingState.completed) {
+        player.stop();
         setState(() {
           currentVoice = "";
         });
       }
     });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkPermission();
+    });
+  }
+
+  checkPermission() async {
+    await audioRecord.hasPermission();
   }
 
   @override

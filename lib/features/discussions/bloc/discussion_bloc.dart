@@ -15,7 +15,7 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
   DiscussionBloc(this.msgRepository) : super(DiscussionInitState()) {
     on<LoadDiscussionClientEvent>((event, emit) async {
       try {
-        if(state is! DiscussionLoadedState) {
+        if (state is! DiscussionLoadedState) {
           emit(DiscussionLoadingState());
         }
         final loadDiscussionClientResponse =
@@ -33,8 +33,11 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
             emit(DiscussionFailureState(
                 code: 200, msg: AppTxt.errorListIsEmpty));
           } else {
+            loadDiscussionClientResponse.data!.discussion.sort((d1, d2) =>
+                d1.taskDate.toUtc().millisecondsSinceEpoch -
+                d2.taskDate.toUtc().millisecondsSinceEpoch);
             emit(DiscussionLoadedState(
-                discussionList: loadDiscussionClientResponse.data!.discussion));
+                discussionList: loadDiscussionClientResponse.data!.discussion.reversed.toList()));
           }
         }
       } catch (e) {
@@ -45,11 +48,11 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
 
     on<LoadDiscussionTrainerEvent>((event, emit) async {
       try {
-        if(state is! DiscussionLoadedState) {
+        if (state is! DiscussionLoadedState) {
           emit(DiscussionLoadingState());
         }
         final loadDiscussionTrainerResponse =
-        await msgRepository.loadDiscussionTrainer(event.user);
+            await msgRepository.loadDiscussionTrainer(event.user);
         if (loadDiscussionTrainerResponse.code != 200) {
           if (loadDiscussionTrainerResponse.code == 401) {
             emit(DiscussionFailureState(
@@ -64,7 +67,9 @@ class DiscussionBloc extends Bloc<DiscussionEvent, DiscussionState> {
                 code: 200, msg: AppTxt.errorListIsEmpty));
           } else {
             emit(DiscussionLoadedState(
-                discussionList: loadDiscussionTrainerResponse.data!.discussion.reversed.toList()));
+                discussionList: loadDiscussionTrainerResponse
+                    .data!.discussion.reversed
+                    .toList()));
           }
         }
       } catch (e) {
