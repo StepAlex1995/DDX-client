@@ -34,17 +34,17 @@ class _LoadFeedbackFilePageState extends State<LoadFeedbackFilePage> {
   bool loadSuccess = false;
   XFile? file;
   ImagePicker image = ImagePicker();
-  bool videoFile = false;
+  //bool videoFile = false;
   final _loadFeedbackFileBloc =
       LoadFeedbackFileBloc(GetIt.I<AbstractExerciseRepository>());
-  late VideoPlayerController _videoPlayerController;
+  //late VideoPlayerController _videoPlayerController;
   bool startedPlaying = false;
   bool preloadFailed = false;
 
   @override
   void dispose() {
     _loadFeedbackFileBloc.close();
-    _videoPlayerController.dispose();
+    //_videoPlayerController.dispose();
     super.dispose();
   }
 
@@ -71,7 +71,18 @@ class _LoadFeedbackFilePageState extends State<LoadFeedbackFilePage> {
               height: 30,
             ),
             Builder(builder: (context) {
-              if (videoFile) {
+              return Container(
+                width: 300,
+                height: 240,
+                color: AppColor.darkBackgroundColor,
+                child: file == null
+                    ? const Icon(
+                  Icons.image,
+                  size: 50,
+                )
+                    : Image.file(File(file!.path), fit: BoxFit.fitHeight),
+              );
+              /*if (videoFile) {
                 if (preloadFailed) {
                   return Center(
                     child: Container(
@@ -90,7 +101,7 @@ class _LoadFeedbackFilePageState extends State<LoadFeedbackFilePage> {
                     ),
                   );
                 }
-                return Stack(children: [
+               return Stack(children: [
                   Center(
                     child: Container(
                       width: 300,
@@ -142,7 +153,7 @@ class _LoadFeedbackFilePageState extends State<LoadFeedbackFilePage> {
                         )
                       : Image.file(File(file!.path), fit: BoxFit.fitHeight),
                 );
-              }
+              }*/
             }),
             Padding(
               padding: const EdgeInsets.only(left: 36.0, right: 36, top: 36),
@@ -169,7 +180,7 @@ class _LoadFeedbackFilePageState extends State<LoadFeedbackFilePage> {
                 },
               ),
             ),
-            Padding(
+           /* Padding(
               padding: const EdgeInsets.only(
                   left: 36.0, right: 36, top: 18, bottom: 36),
               child: RoundedButton(
@@ -181,7 +192,7 @@ class _LoadFeedbackFilePageState extends State<LoadFeedbackFilePage> {
                   //checkPermissionCamera();
                 },
               ),
-            ),
+            ),*/
             BlocListener<LoadFeedbackFileBloc, LoadFeedbackFileState>(
               bloc: _loadFeedbackFileBloc,
               listener: (context, state) {
@@ -292,7 +303,7 @@ class _LoadFeedbackFilePageState extends State<LoadFeedbackFilePage> {
       file = null;
       preloadFailed = false;
     });
-    videoFile = false;
+    //videoFile = false;
     var img = await image.pickImage(source: ImageSource.camera);
     setState(() {
       file = img;
@@ -304,14 +315,14 @@ class _LoadFeedbackFilePageState extends State<LoadFeedbackFilePage> {
       file = null;
       preloadFailed = false;
     });
-    videoFile = false;
+    //videoFile = false;
     var img = await image.pickImage(source: ImageSource.gallery);
     setState(() {
       file = img;
     });
   }
 
-  Future<bool> started() async {
+/*  Future<bool> started() async {
     await _videoPlayerController.initialize();
     await _videoPlayerController.play();
     startedPlaying = true;
@@ -340,7 +351,7 @@ class _LoadFeedbackFilePageState extends State<LoadFeedbackFilePage> {
     } else {
       preloadFailed = true;
     }
-  }
+  }*/
 
   goToTask() {
     Navigator.pop(context);

@@ -437,6 +437,9 @@ class _MessengerPageState extends State<MessengerPage>
   }
 
   playRecord(String message) async {
+    if (!isVoiceMsg(message)) {
+      return;
+    }
     try {
       player.playerStateStream.listen((state) {});
       if (player.playerState.playing) {

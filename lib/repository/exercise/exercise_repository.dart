@@ -135,10 +135,9 @@ class ExerciseRepository extends AbstractExerciseRepository {
           },
           headers: getHeaderWithTokenForFileLoader(user.token),
         ));
-    if (response.statusCode == 200 && response.data != null) {
-      LoadFeedbackFileResponse data =
-          LoadFeedbackFileResponse.fromJson(response.data);
-      return AppResponseModel(code: 200, data: data);
+    if (response.statusCode == 200 && response.data!=null ) {
+      LoadFeedbackFileResponse data = LoadFeedbackFileResponse.fromJson(response.data);
+      return AppResponseModel(code: 200,data: data);
     } else {
       return AppResponseModel(code: 500);
     }
