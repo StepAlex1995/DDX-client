@@ -111,6 +111,7 @@ class AppTxt {
   static const btnAddVideo = 'Загрузить видео';
   static const titleAddPhoto = 'Добавьте изображения';
   static const btnUploadPhoto = 'Загрузить изображение';
+  static const btnUploadPhotoVideo = 'Загрузить';
   static const btnComplete = 'Завершить';
   static const btnResetExercise = 'Выбрать другое упражнение';
   static const btnCreateTask = 'Составить занятие';

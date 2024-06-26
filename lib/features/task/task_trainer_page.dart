@@ -132,6 +132,28 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
           task: widget.task,
           paramName: TaskModel.PARAM_TIME_MAX,
         ),
+
+        Builder(builder: (context) {
+          if (widget.task.feedbackClient > 0) {
+            return Column(
+              children: [
+                const SizedBox(height: 28),
+                Text(
+                  AppTxt.difficultyClientCompleteForTrainer +
+                      widget.task.feedbackClient.toString(),
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium!.copyWith(
+                      color: getColorByGradeClient(widget.task.feedbackClient),
+                      fontSize: 20),
+                ),
+                const SizedBox(height: 24),
+              ],
+            );
+          } else {
+            return Container();
+          }
+        }),
+
         Builder(builder: (context) {
           if (widget.task.state < 2) {
             return Container();
@@ -231,33 +253,11 @@ class _TaskTrainerPageState extends State<TaskTrainerPage> {
           }
         }),
 
-        ///
-        Builder(builder: (context) {
-          if (widget.task.feedbackClient > 0) {
-            return Column(
-              children: [
-                const SizedBox(height: 28),
-                Text(
-                  AppTxt.difficultyClientCompleteForTrainer +
-                      widget.task.feedbackClient.toString(),
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                      color: getColorByGradeClient(widget.task.feedbackClient),
-                      fontSize: 20),
-                ),
-                const SizedBox(height: 24),
-              ],
-            );
-          } else {
-            return Container();
-          }
-        }),
-
         Builder(builder: (context) {
           if (widget.task.fileFeedbackUrl.isNotEmpty &&
               widget.task.fileFeedbackUrl != BaseModel.NO_DATA_STR) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 36.0),
+              padding: const EdgeInsets.only(left: 36.0,right: 36,top:36),
               child: RoundedButton(
                 bgrColor: AppColor.secondaryAccentColor,
                 text: AppTxt.showFeedbackFileTrainer,

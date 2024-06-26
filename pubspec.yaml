@@ -27,7 +27,7 @@ dependencies:
   video_player: ^2.8.7
   record: ^4.4.4
   just_audio: ^0.9.38
-
+  chunked_uploader: ^1.0.0
 
 dev_dependencies:
   flutter_test:

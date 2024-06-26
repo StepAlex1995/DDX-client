@@ -1,4 +1,6 @@
 import 'package:ddx_trainer/repository/exercise/model/load_feedback_file_request.dart';
+import 'package:ddx_trainer/repository/exercise/model/load_feedback_file_response.dart';
+import 'package:ddx_trainer/repository/user_repository/model/app_response_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../repository/exercise/abstract_exercise_repository.dart';
@@ -18,8 +20,14 @@ class LoadFeedbackFileBloc
     on<LoadFeedbackFileUploadEvent>((event, emit) async {
       emit(LoadFeedbackFileUploading());
       try {
-        final loadedFeedbackFile = await exerciseRepository
-            .uploadFeedbackFileExercise(event.user, event.requestData);
+        AppResponseModel<LoadFeedbackFileResponse> loadedFeedbackFile;
+        if(event.isVideoFile){
+           loadedFeedbackFile = await exerciseRepository
+              .uploadFeedbackVideoFileExercise(event.user, event.requestData);
+        }else {
+           loadedFeedbackFile = await exerciseRepository
+              .uploadFeedbackFileExercise(event.user, event.requestData);
+        }
         if (loadedFeedbackFile.code != 200) {
           if (loadedFeedbackFile.code == 401) {
             emit(LoadFeedbackFileFailure(

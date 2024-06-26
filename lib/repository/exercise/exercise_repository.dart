@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:chunked_uploader/chunked_uploader.dart';
 import 'package:ddx_trainer/repository/exercise/abstract_exercise_repository.dart';
 import 'package:ddx_trainer/repository/exercise/model/add_exercise_request.dart';
 import 'package:ddx_trainer/repository/exercise/model/add_exercise_response.dart';
@@ -135,9 +138,57 @@ class ExerciseRepository extends AbstractExerciseRepository {
           },
           headers: getHeaderWithTokenForFileLoader(user.token),
         ));
-    if (response.statusCode == 200 && response.data!=null ) {
-      LoadFeedbackFileResponse data = LoadFeedbackFileResponse.fromJson(response.data);
-      return AppResponseModel(code: 200,data: data);
+    if (response.statusCode == 200 && response.data != null) {
+      LoadFeedbackFileResponse data =
+          LoadFeedbackFileResponse.fromJson(response.data);
+      return AppResponseModel(code: 200, data: data);
+    } else {
+      return AppResponseModel(code: 500);
+    }
+  }
+
+  @override
+  Future<AppResponseModel<LoadFeedbackFileResponse>>
+      uploadFeedbackVideoFileExercise(
+          User user, LoadFeedbackFileRequest feedback) async {
+   final file = File(feedback.file.path);
+
+    var path = file.path;
+    String fileName = path.split('/').last;
+    String url = '${Config.server}/api/file/task/video/${feedback.taskId}';
+    ChunkedUploader chunkedUploader = ChunkedUploader(
+      Dio(
+        BaseOptions(
+          baseUrl: url,
+          headers: {
+            'Authorization': 'bearer ${user.token}',
+            'Content-Type': 'multipart/form-data',
+            'Connection': 'Keep-Alive',
+          },
+        ),
+      ),
+    );
+    Response? response;
+    try {
+      response = await chunkedUploader.upload(
+        fileKey: "file",
+        method: "POST",
+        maxChunkSize: 5000000000,
+        path: url,
+        onUploadProgress: (v) {},
+        fileDataStream: file.openRead(),
+        fileName: fileName,
+        fileSize: file.lengthSync(),
+      );
+    } catch (e) {
+      return AppResponseModel(code: 500);
+    }
+    if (response != null &&
+        response.statusCode == 200 &&
+        response.data != null) {
+      LoadFeedbackFileResponse data =
+          LoadFeedbackFileResponse.fromJson(response.data);
+      return AppResponseModel(code: 200, data: data);
     } else {
       return AppResponseModel(code: 500);
     }

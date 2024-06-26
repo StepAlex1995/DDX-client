@@ -27,4 +27,7 @@ abstract class AbstractExerciseRepository extends AbstractAppRepository {
 
   Future<AppResponseModel<LoadFeedbackFileResponse>> uploadFeedbackFileExercise(
       User user, LoadFeedbackFileRequest feedback);
+
+  Future<AppResponseModel<LoadFeedbackFileResponse>> uploadFeedbackVideoFileExercise(
+      User user, LoadFeedbackFileRequest feedback);
 }
